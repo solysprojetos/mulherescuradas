@@ -21,8 +21,10 @@
     --input:#241a2c;
   }
   *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
   body{
     font-family:'Poppins',sans-serif;
+    -webkit-tap-highlight-color:transparent;
     background:
       radial-gradient(120% 60% at 50% 0%, rgba(236,42,143,.28), transparent 60%),
       var(--bg);
@@ -109,7 +111,8 @@
   input{
     width:100%;padding:16px 18px;border-radius:12px;
     background:var(--input);border:1px solid var(--border);
-    color:var(--text);font-family:inherit;font-size:15px;
+    color:var(--text);font-family:inherit;
+    font-size:16px; /* 16px+ evita o zoom automatico do iPhone ao tocar no campo */
     transition:border-color .2s, box-shadow .2s;
   }
   input::placeholder{color:#6f6079}
@@ -172,7 +175,31 @@
   .success p{color:var(--muted);font-size:15px;line-height:1.5}
   .success p b{color:var(--pink-2)}
 
-  @media(max-width:480px){ h1{font-size:36px} .form h2{font-size:26px} }
+  /* ajustes para celular */
+  @media(max-width:480px){
+    body{padding:20px 12px 44px}
+    h1{font-size:34px;margin:18px 0 10px}
+    .subtitle{font-size:16px;margin-bottom:20px}
+    .badge{font-size:14px}
+    .video{border-radius:18px;margin-bottom:22px}
+    .video video{border-radius:18px}
+    .locknote{padding:14px 14px;gap:11px;margin-bottom:18px}
+    .locknote svg{width:22px;height:22px}
+    .form{padding:28px 18px;border-radius:18px}
+    .form h2{font-size:24px}
+    .form .hint{font-size:14px;margin-bottom:22px}
+    label{font-size:14px;margin:15px 0 7px}
+    input{padding:14px 15px}
+    .radio-opt{padding:13px 14px;gap:11px}
+    .submit{padding:16px;font-size:16px;margin-top:24px}
+    .success{padding:36px 20px;border-radius:18px}
+    .success h2{font-size:23px}
+  }
+  /* celulares bem pequenos */
+  @media(max-width:360px){
+    h1{font-size:29px}
+    .subtitle{font-size:14.5px}
+  }
 </style>
 </head>
 <body>
@@ -206,13 +233,13 @@
       <p class="hint">Preencha seus dados para participar</p>
 
       <label for="nome">Nome</label>
-      <input id="nome" type="text" placeholder="Seu nome completo">
+      <input id="nome" type="text" placeholder="Seu nome completo" autocomplete="name" autocapitalize="words">
 
       <label for="wpp">WhatsApp</label>
-      <input id="wpp" type="tel" placeholder="(00) 00000-0000">
+      <input id="wpp" type="tel" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="tel">
 
       <label for="email">E-mail</label>
-      <input id="email" type="email" placeholder="seu@email.com">
+      <input id="email" type="email" placeholder="seu@email.com" autocomplete="email" inputmode="email" autocapitalize="off">
 
       <label>Você faz parte de qual grupo?</label>
       <div class="radio-group">
@@ -287,6 +314,16 @@
       var email = document.getElementById('email');
 
       function emailValido(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+      // mascara automatica do WhatsApp: (00) 00000-0000
+      wpp.addEventListener('input', function(){
+        var d = wpp.value.replace(/\D/g,'').slice(0,11);
+        var f = '';
+        if(d.length > 0) f = '(' + d.slice(0,2);
+        if(d.length >= 3) f += ') ' + d.slice(2,7);
+        if(d.length >= 8) f += '-' + d.slice(7);
+        wpp.value = f;
+      });
       function limpaErros(){ [nome,wpp,email].forEach(function(el){ el.classList.remove('input-erro'); }); }
 
       btn.addEventListener('click', function(){
