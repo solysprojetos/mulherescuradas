@@ -150,6 +150,28 @@
     border-color:var(--pink);background:rgba(236,42,143,.08);
   }
 
+  /* mensagens de status do formulario */
+  .msg{margin-top:16px;text-align:center;font-size:14px;font-weight:600;min-height:20px}
+  .msg.erro{color:#ff7a9c}
+  .msg.info{color:var(--muted)}
+  .submit:disabled{opacity:.55;cursor:not-allowed}
+  .input-erro{border-color:#ff7a9c !important;box-shadow:0 0 0 3px rgba(255,122,156,.18) !important}
+
+  /* tela de sucesso apos inscricao */
+  .success{
+    background:var(--card);border:1px solid rgba(236,42,143,.35);
+    border-radius:22px;padding:44px 28px;text-align:center;animation:reveal .5s ease both;
+  }
+  .success .check{
+    width:72px;height:72px;margin:0 auto 18px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--pink),var(--orange));
+  }
+  .success .check svg{width:38px;height:38px;fill:#fff}
+  .success h2{font-size:26px;font-weight:700;margin-bottom:10px}
+  .success p{color:var(--muted);font-size:15px;line-height:1.5}
+  .success p b{color:var(--pink-2)}
+
   @media(max-width:480px){ h1{font-size:36px} .form h2{font-size:26px} }
 </style>
 </head>
@@ -211,16 +233,34 @@
         </label>
       </div>
 
-      <button class="submit">Quero participar</button>
+      <button class="submit" id="btnSubmit" type="button">Quero participar</button>
+      <p id="msg" class="msg"></p>
+    </div>
+
+    <div id="success" class="success" style="display:none">
+      <div class="check">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <h2>Inscrição confirmada! 💖</h2>
+      <p>Enviamos um e-mail de confirmação para <b id="okEmail"></b>.<br>Confira também a caixa de spam/promoções. Nos vemos lá!</p>
     </div>
   </div>
 
   <script>
+    /* ================================================================
+       COLE AQUI a URL do seu App da Web do Google (veja INSTRUCOES.md).
+       Enquanto estiver com o texto abaixo, o formulário NÃO envia de
+       verdade — ele só mostra um aviso de teste.
+       ================================================================ */
+    var URL_PLANILHA = "COLE_A_URL_AQUI";
+
     (function(){
       var video = document.getElementById('convite-video');
-      var form = document.getElementById('form');
-      var lock = document.getElementById('locknote');
-      var bar = document.getElementById('progressbar');
+      var form  = document.getElementById('form');
+      var lock  = document.getElementById('locknote');
+      var bar   = document.getElementById('progressbar');
+      var btn   = document.getElementById('btnSubmit');
+      var msg   = document.getElementById('msg');
       var unlocked = false;
 
       function unlock(){
@@ -232,16 +272,78 @@
         form.scrollIntoView({behavior:'smooth', block:'center'});
       }
 
-      // atualiza barra de progresso conforme assiste
+      // barra de progresso conforme assiste
       video.addEventListener('timeupdate', function(){
         if(video.duration){
-          var pct = Math.min(100, (video.currentTime / video.duration) * 100);
-          bar.style.width = pct + '%';
+          bar.style.width = Math.min(100,(video.currentTime/video.duration)*100) + '%';
         }
       });
-
-      // libera quando o vídeo termina
+      // libera o formulário quando o vídeo termina
       video.addEventListener('ended', unlock);
+
+      // ---------- envio da inscrição ----------
+      var nome  = document.getElementById('nome');
+      var wpp   = document.getElementById('wpp');
+      var email = document.getElementById('email');
+
+      function emailValido(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+      function limpaErros(){ [nome,wpp,email].forEach(function(el){ el.classList.remove('input-erro'); }); }
+
+      btn.addEventListener('click', function(){
+        limpaErros();
+        msg.className = 'msg';
+        msg.textContent = '';
+
+        var grupoEl = document.querySelector('input[name="publico"]:checked');
+        var erro = null, alvo = null;
+
+        if(!nome.value.trim()){ erro = 'Digite seu nome.'; alvo = nome; }
+        else if(!wpp.value.trim()){ erro = 'Digite seu WhatsApp.'; alvo = wpp; }
+        else if(!emailValido(email.value.trim())){ erro = 'Digite um e-mail válido.'; alvo = email; }
+        else if(!grupoEl){ erro = 'Selecione a qual grupo você pertence.'; }
+
+        if(erro){
+          msg.className = 'msg erro';
+          msg.textContent = erro;
+          if(alvo){ alvo.classList.add('input-erro'); alvo.focus(); }
+          return;
+        }
+
+        var dados = {
+          nome:  nome.value.trim(),
+          whatsapp: wpp.value.trim(),
+          email: email.value.trim(),
+          grupo: grupoEl.value
+        };
+
+        if(URL_PLANILHA === "COLE_A_URL_AQUI"){
+          msg.className = 'msg info';
+          msg.textContent = '⚠️ Formulário ainda não conectado. Falta colar a URL da planilha (veja INSTRUCOES.md).';
+          return;
+        }
+
+        btn.disabled = true;
+        var textoOriginal = btn.textContent;
+        btn.textContent = 'Enviando...';
+        msg.className = 'msg info';
+        msg.textContent = '';
+
+        fetch(URL_PLANILHA, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify(dados)
+        }).then(function(){
+          document.getElementById('okEmail').textContent = dados.email;
+          form.style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          document.getElementById('success').scrollIntoView({behavior:'smooth', block:'center'});
+        }).catch(function(){
+          btn.disabled = false;
+          btn.textContent = textoOriginal;
+          msg.className = 'msg erro';
+          msg.textContent = 'Não foi possível enviar agora. Tente novamente.';
+        });
+      });
     })();
   </script>
 </body>
