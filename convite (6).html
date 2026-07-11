@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convite Especial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#120a17;
+    --card:#1b1120;
+    --card-2:#241528;
+    --pink:#ec2a8f;
+    --pink-2:#ff4fa3;
+    --orange:#f6b26b;
+    --text:#f4eef6;
+    --muted:#9a8aa5;
+    --border:rgba(255,255,255,.08);
+    --input:#241a2c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Poppins',sans-serif;
+    background:
+      radial-gradient(120% 60% at 50% 0%, rgba(236,42,143,.28), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:28px 16px 60px;
+  }
+  .wrap{width:100%;max-width:520px}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    margin:0 auto;
+    font-weight:600;font-size:16px;letter-spacing:.5px;
+  }
+  .badge svg{width:16px;height:16px;fill:var(--pink-2)}
+  .badge .btxt{
+    background:linear-gradient(90deg,var(--pink) 0%,var(--pink-2) 45%,var(--orange) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .center{text-align:center;display:flex;flex-direction:column;align-items:center}
+
+  h1{
+    font-size:46px;line-height:1.05;font-weight:800;
+    margin:22px 0 12px;letter-spacing:-1px;
+  }
+  h1 .grad{
+    background:linear-gradient(90deg,var(--pink) 0%,var(--pink-2) 45%,var(--orange) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .subtitle{
+    font-size:18px;font-weight:600;margin-bottom:26px;
+    background:linear-gradient(90deg,var(--pink) 0%,var(--pink-2) 45%,var(--orange) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  .video{
+    position:relative;border-radius:22px;overflow:hidden;
+    margin-bottom:28px;
+    border:1px solid var(--border);
+    background:#0c0713;
+    box-shadow:0 10px 50px rgba(236,42,143,.18);
+  }
+  .video video{
+    display:block;width:100%;height:auto;border-radius:22px;
+  }
+
+  /* aviso enquanto o vídeo não termina */
+  .locknote{
+    display:flex;align-items:center;gap:14px;
+    background:rgba(236,42,143,.08);
+    border:1px solid rgba(236,42,143,.3);
+    border-radius:16px;padding:16px 18px;margin-bottom:22px;
+  }
+  .locknote svg{width:26px;height:26px;flex:0 0 auto;fill:var(--pink-2)}
+  .locknote .lk-text{font-size:14px;line-height:1.35}
+  .locknote .lk-text b{color:var(--pink-2)}
+  .locknote .lk-text span{color:var(--muted);display:block;margin-top:2px;font-size:13px}
+  .progress{height:6px;border-radius:100px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
+  .progress > i{display:block;height:100%;width:0%;
+    background:linear-gradient(90deg,var(--pink),var(--orange));transition:width .25s}
+
+  /* card do formulário: bloqueado x liberado */
+  .form.locked{
+    filter:blur(6px);opacity:.5;pointer-events:none;user-select:none;
+  }
+  .form.reveal{animation:reveal .6s ease both}
+  @keyframes reveal{
+    from{opacity:0;transform:translateY(16px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .form{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:36px 28px;
+    transition:filter .5s, opacity .5s;
+  }
+  .form h2{text-align:center;font-size:30px;font-weight:700;margin-bottom:8px}
+  .form .hint{text-align:center;color:#8f7fb0;font-size:15px;margin-bottom:28px}
+  label{display:block;font-weight:600;font-size:15px;margin:18px 0 8px}
+  input{
+    width:100%;padding:16px 18px;border-radius:12px;
+    background:var(--input);border:1px solid var(--border);
+    color:var(--text);font-family:inherit;font-size:15px;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  input::placeholder{color:#6f6079}
+  input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,42,143,.2)}
+  .submit{
+    width:100%;margin-top:28px;padding:17px;border:none;border-radius:12px;
+    background:linear-gradient(90deg,var(--pink),var(--pink-2) 55%,var(--orange));
+    color:#fff;font-family:inherit;font-weight:700;font-size:17px;cursor:pointer;
+    transition:opacity .2s, transform .1s;
+  }
+  .submit:hover{opacity:.92}
+  .submit:active{transform:scale(.99)}
+
+  /* seleção de público (bolinhas) */
+  .radio-group{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .radio-opt{
+    display:flex;align-items:center;gap:13px;cursor:pointer;
+    padding:15px 18px;border-radius:12px;
+    background:var(--input);border:1px solid var(--border);
+    transition:border-color .2s, background .2s;
+  }
+  .radio-opt:hover{border-color:rgba(236,42,143,.5)}
+  .radio-opt input{display:none}
+  .radio-opt .dot{
+    width:22px;height:22px;flex:0 0 auto;border-radius:50%;
+    border:2px solid #6f6079;position:relative;transition:border-color .2s;
+  }
+  .radio-opt .dot::after{
+    content:"";position:absolute;inset:4px;border-radius:50%;
+    background:linear-gradient(135deg,var(--pink),var(--orange));
+    transform:scale(0);transition:transform .2s;
+  }
+  .radio-opt .txt{font-size:15px;font-weight:500}
+  .radio-opt .txt small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
+  .radio-opt input:checked ~ .dot{border-color:var(--pink)}
+  .radio-opt input:checked ~ .dot::after{transform:scale(1)}
+  .radio-opt:has(input:checked){
+    border-color:var(--pink);background:rgba(236,42,143,.08);
+  }
+
+  @media(max-width:480px){ h1{font-size:36px} .form h2{font-size:26px} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="center">
+      <span class="badge">
+        <span class="btxt">Convite Exclusivo</span>
+      </span>
+      <h1>Você está <span class="grad">convidada</span></h1>
+      <p class="subtitle">Mulheres curadas por Karoline Rodrigues</p>
+    </div>
+
+    <div class="video">
+      <video id="convite-video" controls playsinline preload="metadata" poster="convite-poster.jpg">
+        <source src="convite-video.mp4" type="video/mp4">
+        Seu navegador não suporta vídeo.
+      </video>
+    </div>
+
+    <div id="locknote" class="locknote">
+      <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm3 8H9V6a3 3 0 016 0v3z"/></svg>
+      <div class="lk-text">
+        <b>Assista o vídeo até o final</b> para liberar sua inscrição.
+        <span>A inscrição abre automaticamente quando o vídeo terminar.</span>
+        <div class="progress"><i id="progressbar"></i></div>
+      </div>
+    </div>
+
+    <div id="form" class="form locked">
+      <h2>Inscreva-se</h2>
+      <p class="hint">Preencha seus dados para participar</p>
+
+      <label for="nome">Nome</label>
+      <input id="nome" type="text" placeholder="Seu nome completo">
+
+      <label for="wpp">WhatsApp</label>
+      <input id="wpp" type="tel" placeholder="(00) 00000-0000">
+
+      <label for="email">E-mail</label>
+      <input id="email" type="email" placeholder="seu@email.com">
+
+      <label>Você faz parte de qual grupo?</label>
+      <div class="radio-group">
+        <label class="radio-opt">
+          <input type="radio" name="publico" value="SGroup">
+          <span class="dot"></span>
+          <span class="txt">SGroup</span>
+        </label>
+        <label class="radio-opt">
+          <input type="radio" name="publico" value="Solys">
+          <span class="dot"></span>
+          <span class="txt">Solys</span>
+        </label>
+        <label class="radio-opt">
+          <input type="radio" name="publico" value="Convidada particular">
+          <span class="dot"></span>
+          <span class="txt">Convidada<small>Convite particular</small></span>
+        </label>
+      </div>
+
+      <button class="submit">Quero participar</button>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var video = document.getElementById('convite-video');
+      var form = document.getElementById('form');
+      var lock = document.getElementById('locknote');
+      var bar = document.getElementById('progressbar');
+      var unlocked = false;
+
+      function unlock(){
+        if(unlocked) return;
+        unlocked = true;
+        form.classList.remove('locked');
+        form.classList.add('reveal');
+        lock.style.display = 'none';
+        form.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+
+      // atualiza barra de progresso conforme assiste
+      video.addEventListener('timeupdate', function(){
+        if(video.duration){
+          var pct = Math.min(100, (video.currentTime / video.duration) * 100);
+          bar.style.width = pct + '%';
+        }
+      });
+
+      // libera quando o vídeo termina
+      video.addEventListener('ended', unlock);
+    })();
+  </script>
+</body>
+</html>
