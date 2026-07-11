@@ -1,39 +1,26 @@
 name: Publicar site (GitHub Pages)
 
+# Copia o conteudo do main para o branch gh-pages a cada mudanca.
+# O GitHub Pages publica o site a partir do gh-pages automaticamente.
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  publicar:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Baixar o codigo
         uses: actions/checkout@v4
 
-      - name: Configurar o Pages (ativa se ainda nao estiver ativo)
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Empacotar o site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-
-      - name: Publicar
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Atualizar o branch gh-pages
+        run: git push origin HEAD:gh-pages --force
