@@ -387,11 +387,12 @@
         if(aberto) return;
         aberto = true;
         envelope.classList.add('aberto');
+        // a cartinha fica na tela um tempinho antes do convite aparecer
         setTimeout(function(){
           overlay.classList.add('sumir');
           document.body.classList.remove('carta-fechada');
-        }, 1400);
-        setTimeout(function(){ overlay.remove(); }, 2200);
+        }, 3200);
+        setTimeout(function(){ overlay.remove(); }, 4000);
       }
       envelope.addEventListener('click', abrirCarta);
       envelope.addEventListener('keydown', function(e){
