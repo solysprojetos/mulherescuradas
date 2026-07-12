@@ -1,0 +1,26 @@
+name: Renovar dominio do Pages (forca emissao do certificado)
+
+on: workflow_dispatch
+
+permissions:
+  pages: write
+
+jobs:
+  renovar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remover e re-adicionar o dominio personalizado
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          API="https://api.github.com/repos/${{ github.repository }}/pages"
+          H1="Authorization: Bearer $GH_TOKEN"
+          H2="Accept: application/vnd.github+json"
+          echo "== removendo dominio =="
+          curl -sS -X PUT -H "$H1" -H "$H2" "$API" -d '{"cname":null}' -w "\nhttp: %{http_code}\n"
+          sleep 8
+          echo "== re-adicionando dominio =="
+          curl -sS -X PUT -H "$H1" -H "$H2" "$API" -d '{"cname":"mulherescuradas.institutoabner.com.br"}' -w "\nhttp: %{http_code}\n"
+          sleep 8
+          echo "== status apos renovacao =="
+          curl -sS -H "$H1" -H "$H2" "$API" | python3 -c "import json,sys; d=json.load(sys.stdin); print('dominio:', d.get('cname')); print('status:', d.get('status')); c=d.get('https_certificate') or {}; print('certificado_estado:', c.get('state')); print('certificado_descricao:', c.get('description'))"
