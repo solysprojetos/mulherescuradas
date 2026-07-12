@@ -269,31 +269,25 @@
     font-size:26px;transition:opacity .4s, transform .4s;
   }
   .envelope.aberto .env-lacre{opacity:0;transform:translate(-50%,-50%) scale(.4)}
-  /* a carta que sai de dentro: a arte do evento */
+  /* a carta que sai de dentro */
   .env-carta{
     position:absolute;left:6%;top:8%;width:88%;height:84%;z-index:2;
-    background:#1b1120;
-    border-radius:10px;overflow:hidden;
-    box-shadow:0 14px 44px rgba(0,0,0,.45);
+    background:linear-gradient(180deg,#fff6fb,#ffe3f1);
+    border-radius:8px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    color:#a52a6c;font-weight:700;font-size:15px;text-align:center;padding:10px;
     transition:transform .8s cubic-bezier(.2,.7,.3,1) .35s;
   }
-  .env-carta img{
-    position:absolute;inset:0;width:100%;height:100%;
-    object-fit:cover;display:block;
+  .env-carta small{font-weight:500;color:#c76a9e;font-size:12px}
+  .env-carta .cora{font-size:24px}
+  .envelope.aberto .env-carta{transform:translateY(-78%)}
+
+  /* arte do evento como logo na tela de abertura */
+  .carta-logo{
+    width:min(70vw,290px);border-radius:22px;display:block;
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 16px 60px rgba(236,42,143,.35);
   }
-  .env-legenda{
-    position:absolute;left:0;right:0;bottom:0;z-index:1;
-    padding:30px 12px 10px;text-align:center;
-    background:linear-gradient(180deg,transparent,rgba(12,7,19,.88));
-    color:#fff;font-weight:600;font-size:14px;
-  }
-  .envelope.aberto .env-carta{
-    height:auto;aspect-ratio:1/1;
-    transform:translateY(-72%);
-  }
-  /* o titulo sai de cena para dar espaco a arte */
-  .carta-titulo{transition:opacity .4s}
-  .carta-overlay.aberta .carta-titulo{opacity:0}
 
   /* ajustes para celular */
   @media(max-width:480px){
@@ -328,12 +322,14 @@
 
   <!-- tela de abertura: a carta -->
   <div id="cartaOverlay" class="carta-overlay">
+    <img class="carta-logo" src="capa-mulheres-curadas.jpg" alt="Mulheres Curadas por Karoline Rodrigues">
     <p class="carta-titulo">Você recebeu um convite especial</p>
     <div id="envelope" class="envelope" role="button" aria-label="Abrir convite" tabindex="0">
       <div class="env-corpo"></div>
       <div class="env-carta">
-        <img src="capa-mulheres-curadas.jpg" alt="Mulheres Curadas por Karoline Rodrigues">
-        <span class="env-legenda">Para você 💖</span>
+        <span class="cora">💖</span>
+        Para você
+        <small>com carinho, Karoline Rodrigues</small>
       </div>
       <div class="env-bolso"></div>
       <div class="env-aba"></div>
@@ -441,7 +437,6 @@
         if(aberto) return;
         aberto = true;
         envelope.classList.add('aberto');
-        overlay.classList.add('aberta');
         // a cartinha fica na tela um tempinho antes do convite aparecer
         setTimeout(function(){
           overlay.classList.add('sumir');
