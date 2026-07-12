@@ -80,7 +80,11 @@
     box-shadow:0 10px 50px rgba(236,42,143,.18);
   }
   .video video{
-    display:block;width:100%;height:auto;border-radius:22px;
+    display:block;width:auto;max-width:100%;height:auto;border-radius:22px;
+    margin:0 auto;
+    /* video em pe: limita a altura para caber na tela do celular */
+    max-height:74vh;
+    max-height:74dvh;
   }
 
   /* aviso enquanto o vídeo não termina */
@@ -448,6 +452,11 @@
       });
       // libera o formulário quando o vídeo termina
       video.addEventListener('ended', unlock);
+
+      // ao dar play, centraliza o vídeo na tela para ele aparecer inteiro
+      video.addEventListener('play', function(){
+        video.scrollIntoView({behavior:'smooth', block:'center'});
+      });
 
       // ---------- envio da inscrição ----------
       var nome  = document.getElementById('nome');
