@@ -102,6 +102,16 @@
   .progress > i{display:block;height:100%;width:0%;
     background:linear-gradient(90deg,var(--pink),var(--orange));transition:width .25s}
 
+  /* cartao com data e local, aparece quando o video termina */
+  .evento-card{
+    background:rgba(236,42,143,.08);
+    border:1px solid rgba(236,42,143,.3);
+    border-radius:16px;padding:18px 20px;margin-bottom:22px;
+    text-align:center;animation:reveal .6s ease both;
+  }
+  .evento-card p{font-size:14.5px;line-height:1.55;margin:5px 0;color:var(--text)}
+  .evento-card b{color:var(--pink-2)}
+
   /* card do formulário: bloqueado x liberado */
   .form.locked{
     filter:blur(6px);opacity:.5;pointer-events:none;user-select:none;
@@ -345,6 +355,12 @@
       </div>
     </div>
 
+    <div id="eventoDetalhes" class="evento-card" style="display:none">
+      <p>📅 <b>1º DE AGOSTO DE 2026</b> (SÁBADO), ÀS <b>18H</b></p>
+      <p>📍 <b>SEVEN CHURCH</b><br>AV. CORONEL MIGUEL DIAS, 1404, GUARARAPES<br>FORTALEZA, CE</p>
+      <p>⏰ INICIAREMOS <b>PONTUALMENTE</b>. NÃO SE ATRASE!</p>
+    </div>
+
     <div id="form" class="form locked">
       <h2>Inscreva-se</h2>
       <p class="hint">Preencha seus dados para participar</p>
@@ -441,6 +457,7 @@
         form.classList.remove('locked');
         form.classList.add('reveal');
         lock.style.display = 'none';
+        document.getElementById('eventoDetalhes').style.display = 'block';
         form.scrollIntoView({behavior:'smooth', block:'center'});
       }
 
