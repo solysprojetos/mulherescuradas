@@ -12,7 +12,7 @@ var REMETENTE      = 'Mulheres Curadas';           // nome que aparece como reme
 var NOME_ABA       = 'Inscrições';                  // aba onde as inscrições são salvas
 var EMAIL_AVISO    = 'solysprojetos@gmail.com';     // quem recebe o aviso de nova inscrição
 var DATA_EVENTO    = '1º de agosto de 2026 (sábado), às 18h';
-var LOCAL_EVENTO   = 'Av. Coronel Miguel Dias, 1404 — Guararapes, Fortaleza – CE, 60810-160';
+var LOCAL_EVENTO   = 'Av. Coronel Miguel Dias, 1404, Guararapes, Fortaleza, CE';
 // ===========================================
 
 function doPost(e) {
@@ -66,7 +66,7 @@ function enviarConfirmacao(nome, email) {
         '<div style="background:#241528;border:1px solid rgba(236,42,143,.4);border-radius:12px;padding:16px 20px;margin:16px 0">' +
           '<p style="margin:6px 0;font-size:15px">📅 <b style="color:#ff4fa3">' + DATA_EVENTO + '</b></p>' +
           '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#d9cfe0">📍 ' + LOCAL_EVENTO + '</p>' +
-          '<p style="margin:6px 0;font-size:14px;color:#f6b26b">⏰ Iniciaremos <b>pontualmente</b> — não se atrase!</p>' +
+          '<p style="margin:6px 0;font-size:14px;color:#f6b26b">⏰ Iniciaremos <b>pontualmente</b>. Não se atrase!</p>' +
         '</div>' +
         '<p style="font-size:15px;line-height:1.6;color:#d9cfe0">Com carinho,<br>Karoline Rodrigues</p>' +
       '</div>' +
