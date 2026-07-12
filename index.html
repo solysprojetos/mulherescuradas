@@ -106,11 +106,14 @@
   .evento-card{
     background:rgba(236,42,143,.08);
     border:1px solid rgba(236,42,143,.3);
-    border-radius:16px;padding:18px 20px;margin-bottom:22px;
-    text-align:center;animation:reveal .6s ease both;
+    border-radius:16px;padding:6px 18px;margin-bottom:22px;
+    animation:reveal .6s ease both;
   }
-  .evento-card p{font-size:14.5px;line-height:1.55;margin:5px 0;color:var(--text)}
-  .evento-card b{color:var(--pink-2)}
+  .ev-linha{display:flex;align-items:flex-start;gap:13px;padding:13px 0}
+  .ev-linha + .ev-linha{border-top:1px solid rgba(255,255,255,.08)}
+  .ev-linha .ico{font-size:19px;line-height:1.2;flex:0 0 auto}
+  .ev-linha b{display:block;color:var(--pink-2);font-size:14.5px;letter-spacing:.4px;line-height:1.35}
+  .ev-linha small{display:block;color:var(--muted);font-size:12.5px;line-height:1.5;margin-top:3px;letter-spacing:.3px}
 
   /* card do formulário: bloqueado x liberado */
   .form.locked{
@@ -364,9 +367,18 @@
     </div>
 
     <div id="eventoDetalhes" class="evento-card" style="display:none">
-      <p>📅 <b>1º DE AGOSTO DE 2026</b> (SÁBADO), ÀS <b>18H</b></p>
-      <p>📍 <b>SEVEN CHURCH</b><br>AV. CORONEL MIGUEL DIAS, 1404, GUARARAPES<br>FORTALEZA, CE</p>
-      <p>⏰ INICIAREMOS <b>PONTUALMENTE</b>. NÃO SE ATRASE!</p>
+      <div class="ev-linha">
+        <span class="ico">📅</span>
+        <div><b>1º DE AGOSTO DE 2026</b><small>SÁBADO · 18H</small></div>
+      </div>
+      <div class="ev-linha">
+        <span class="ico">📍</span>
+        <div><b>SEVEN CHURCH</b><small>AV. CORONEL MIGUEL DIAS, 1404, GUARARAPES · FORTALEZA, CE</small></div>
+      </div>
+      <div class="ev-linha">
+        <span class="ico">⏰</span>
+        <div><b>INICIAREMOS PONTUALMENTE</b><small>NÃO SE ATRASE!</small></div>
+      </div>
     </div>
 
     <div id="form" class="form locked">
@@ -411,10 +423,19 @@
       </div>
       <h2>Inscrição confirmada! 💖</h2>
       <p>Enviamos um e-mail de confirmação para <b id="okEmail"></b>.<br>Confira também a caixa de spam/promoções.</p>
-      <div class="evento-info">
-        <p>📅 <b>1º DE AGOSTO DE 2026</b> (SÁBADO), ÀS <b>18H</b></p>
-        <p>📍 <b>SEVEN CHURCH</b><br>AV. CORONEL MIGUEL DIAS, 1404, GUARARAPES<br>FORTALEZA, CE</p>
-        <p>⏰ INICIAREMOS <b>PONTUALMENTE</b>. NÃO SE ATRASE!</p>
+      <div class="evento-card" style="margin:18px 0;text-align:left">
+        <div class="ev-linha">
+          <span class="ico">📅</span>
+          <div><b>1º DE AGOSTO DE 2026</b><small>SÁBADO · 18H</small></div>
+        </div>
+        <div class="ev-linha">
+          <span class="ico">📍</span>
+          <div><b>SEVEN CHURCH</b><small>AV. CORONEL MIGUEL DIAS, 1404, GUARARAPES · FORTALEZA, CE</small></div>
+        </div>
+        <div class="ev-linha">
+          <span class="ico">⏰</span>
+          <div><b>INICIAREMOS PONTUALMENTE</b><small>NÃO SE ATRASE!</small></div>
+        </div>
       </div>
       <p>Nos vemos lá! ✨</p>
     </div>
