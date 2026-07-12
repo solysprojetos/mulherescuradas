@@ -8,7 +8,7 @@
 <!-- previa do link no WhatsApp e redes sociais -->
 <meta property="og:title" content="Você recebeu um convite especial 💌">
 <meta property="og:description" content="Mulheres Curadas, por Karoline Rodrigues. 1º de agosto de 2026 (sábado), às 18h, na Seven Church, em Fortaleza. Toque para abrir sua carta.">
-<meta property="og:image" content="https://mulherescuradas.institutoabner.com.br/convite-poster.jpg">
+<meta property="og:image" content="https://mulherescuradas.institutoabner.com.br/capa-mulheres-curadas.jpg">
 <meta property="og:url" content="https://mulherescuradas.institutoabner.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
@@ -269,18 +269,31 @@
     font-size:26px;transition:opacity .4s, transform .4s;
   }
   .envelope.aberto .env-lacre{opacity:0;transform:translate(-50%,-50%) scale(.4)}
-  /* a carta que sai de dentro */
+  /* a carta que sai de dentro: a arte do evento */
   .env-carta{
     position:absolute;left:6%;top:8%;width:88%;height:84%;z-index:2;
-    background:linear-gradient(180deg,#fff6fb,#ffe3f1);
-    border-radius:8px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-    color:#a52a6c;font-weight:700;font-size:15px;text-align:center;padding:10px;
+    background:#1b1120;
+    border-radius:10px;overflow:hidden;
+    box-shadow:0 14px 44px rgba(0,0,0,.45);
     transition:transform .8s cubic-bezier(.2,.7,.3,1) .35s;
   }
-  .env-carta small{font-weight:500;color:#c76a9e;font-size:12px}
-  .env-carta .cora{font-size:24px}
-  .envelope.aberto .env-carta{transform:translateY(-78%)}
+  .env-carta img{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;display:block;
+  }
+  .env-legenda{
+    position:absolute;left:0;right:0;bottom:0;z-index:1;
+    padding:30px 12px 10px;text-align:center;
+    background:linear-gradient(180deg,transparent,rgba(12,7,19,.88));
+    color:#fff;font-weight:600;font-size:14px;
+  }
+  .envelope.aberto .env-carta{
+    height:auto;aspect-ratio:1/1;
+    transform:translateY(-72%);
+  }
+  /* o titulo sai de cena para dar espaco a arte */
+  .carta-titulo{transition:opacity .4s}
+  .carta-overlay.aberta .carta-titulo{opacity:0}
 
   /* ajustes para celular */
   @media(max-width:480px){
@@ -319,9 +332,8 @@
     <div id="envelope" class="envelope" role="button" aria-label="Abrir convite" tabindex="0">
       <div class="env-corpo"></div>
       <div class="env-carta">
-        <span class="cora">💖</span>
-        Para você
-        <small>com carinho, Karoline Rodrigues</small>
+        <img src="capa-mulheres-curadas.jpg" alt="Mulheres Curadas por Karoline Rodrigues">
+        <span class="env-legenda">Para você 💖</span>
       </div>
       <div class="env-bolso"></div>
       <div class="env-aba"></div>
@@ -429,6 +441,7 @@
         if(aberto) return;
         aberto = true;
         envelope.classList.add('aberto');
+        overlay.classList.add('aberta');
         // a cartinha fica na tela um tempinho antes do convite aparecer
         setTimeout(function(){
           overlay.classList.add('sumir');
