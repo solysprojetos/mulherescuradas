@@ -1,0 +1,14 @@
+name: Verificar certificado do dominio
+
+on: workflow_dispatch
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Testar HTTPS e certificado
+        run: |
+          echo "== STATUS HTTP =="
+          curl -sS -o /dev/null -w "codigo: %{http_code}\n" https://mulherescuradas.institutoabner.com.br/ || echo "CONEXAO HTTPS FALHOU"
+          echo "== DADOS DO CERTIFICADO =="
+          echo | openssl s_client -connect mulherescuradas.institutoabner.com.br:443 -servername mulherescuradas.institutoabner.com.br 2>/dev/null | openssl x509 -noout -issuer -subject -dates || echo "CERTIFICADO AINDA NAO EMITIDO"
