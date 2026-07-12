@@ -201,12 +201,19 @@
   .success h2{font-size:26px;font-weight:700;margin-bottom:10px}
   .success p{color:var(--muted);font-size:15px;line-height:1.5}
   .success p b{color:var(--pink-2)}
-  .success .evento-info{
-    margin:18px 0;padding:16px 18px;border-radius:14px;text-align:center;
-    background:rgba(236,42,143,.08);border:1px solid rgba(236,42,143,.3);
+  /* botao do instagram na confirmacao */
+  .insta-btn{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    margin:16px 0 18px;padding:14px 18px;border-radius:14px;
+    background:linear-gradient(45deg,#f09433,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888);
+    color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;
+    letter-spacing:.4px;transition:opacity .2s, transform .1s;
   }
-  .success .evento-info p{color:var(--text);font-size:14.5px;margin:4px 0}
-  .success .evento-info b{color:var(--pink-2)}
+  .insta-btn:hover{opacity:.92}
+  .insta-btn:active{transform:scale(.99)}
+  .insta-btn svg{width:26px;height:26px;fill:#fff;flex:0 0 auto}
+  .insta-btn span{text-align:left;line-height:1.25}
+  .insta-btn small{display:block;font-weight:500;font-size:12.5px;opacity:.9;letter-spacing:.2px}
 
   /* ===== abertura em formato de carta ===== */
   body.carta-fechada{overflow:hidden;height:100dvh}
@@ -437,6 +444,10 @@
           <div><b>INICIAREMOS PONTUALMENTE</b><small>NÃO SE ATRASE!</small></div>
         </div>
       </div>
+      <a class="insta-btn" href="https://www.instagram.com/mulherescuradasofc_?igsh=MWU4MmRpbDFtZndsbA==" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.9 5.9 0 00-2.13 1.38A5.9 5.9 0 00.63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.8.72 1.48 1.38 2.13a5.9 5.9 0 002.13 1.38c.76.3 1.64.5 2.91.56 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 002.13-1.38 5.9 5.9 0 001.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 00-1.38-2.13A5.9 5.9 0 0019.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 105.84 12 6.16 6.16 0 0012 5.84zm0 10.16A4 4 0 1116 12a4 4 0 01-4 4zm7.85-10.4a1.44 1.44 0 11-1.44-1.44 1.44 1.44 0 011.44 1.44z"/></svg>
+        <span>SIGA NO INSTAGRAM<small>@mulherescuradasofc_</small></span>
+      </a>
       <p>Nos vemos lá! ✨</p>
     </div>
   </div>
