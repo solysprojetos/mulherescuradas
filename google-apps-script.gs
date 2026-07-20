@@ -54,21 +54,21 @@ function doPost(e) {
 function enviarConfirmacao(nome, email) {
   var primeiroNome = (nome || '').split(' ')[0] || '';
   var html =
-    '<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;background:#120a17;color:#f4eef6;border-radius:16px;overflow:hidden">' +
-      '<div style="padding:28px 26px;background:linear-gradient(90deg,#ec2a8f,#ff4fa3,#f6b26b);text-align:center">' +
+    '<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;background:#170f0d;color:#f4eef6;border-radius:16px;overflow:hidden">' +
+      '<div style="padding:28px 26px;background:linear-gradient(90deg,#af7569,#c88a80,#d9a898);text-align:center">' +
         '<h1 style="margin:0;font-size:24px;color:#fff">Inscrição confirmada!</h1>' +
       '</div>' +
       '<div style="padding:28px 26px">' +
         '<p style="font-size:16px">Olá ' + primeiroNome + ', tudo bem? 💖</p>' +
-        '<p style="font-size:15px;line-height:1.6;color:#d9cfe0">' +
-          'Recebemos a sua inscrição para o <b style="color:#ff4fa3">' + NOME_EVENTO + '</b>. Está tudo certo! Anota aí:' +
+        '<p style="font-size:15px;line-height:1.6;color:#ddccc2">' +
+          'Recebemos a sua inscrição para o <b style="color:#c88a80">' + NOME_EVENTO + '</b>. Está tudo certo! Anota aí:' +
         '</p>' +
-        '<div style="background:#241528;border:1px solid rgba(236,42,143,.4);border-radius:12px;padding:16px 20px;margin:16px 0">' +
-          '<p style="margin:6px 0;font-size:15px">📅 <b style="color:#ff4fa3">' + DATA_EVENTO + '</b></p>' +
-          '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#d9cfe0">📍 ' + LOCAL_EVENTO + '</p>' +
-          '<p style="margin:6px 0;font-size:14px;color:#f6b26b">⏰ INICIAREMOS <b>PONTUALMENTE</b>. NÃO SE ATRASE!</p>' +
+        '<div style="background:#221715;border:1px solid rgba(175,117,105,.4);border-radius:12px;padding:16px 20px;margin:16px 0">' +
+          '<p style="margin:6px 0;font-size:15px">📅 <b style="color:#c88a80">' + DATA_EVENTO + '</b></p>' +
+          '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#ddccc2">📍 ' + LOCAL_EVENTO + '</p>' +
+          '<p style="margin:6px 0;font-size:14px;color:#c88a80">⏰ INICIAREMOS <b>PONTUALMENTE</b>. NÃO SE ATRASE!</p>' +
         '</div>' +
-        '<p style="font-size:15px;line-height:1.6;color:#d9cfe0">Com carinho,<br>Karoline Rodrigues</p>' +
+        '<p style="font-size:15px;line-height:1.6;color:#ddccc2">Com carinho,<br>Karoline Rodrigues</p>' +
       '</div>' +
     '</div>';
   MailApp.sendEmail({ to: email, subject: 'Inscrição confirmada 💖 ' + NOME_EVENTO, htmlBody: html, name: REMETENTE });
@@ -79,15 +79,15 @@ function avisarOrganizadora(dados, total, urlPlanilha) {
   var assunto = '🔔 Nova inscrição: ' + (dados.nome || 'sem nome') + ' (total: ' + total + ')';
   var html =
     '<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto">' +
-      '<h2 style="color:#ec2a8f">Nova inscrição no ' + NOME_EVENTO + ' 💖</h2>' +
+      '<h2 style="color:#af7569">Nova inscrição no ' + NOME_EVENTO + ' 💖</h2>' +
       '<table style="border-collapse:collapse;width:100%;font-size:14px">' +
         linha('Nome', dados.nome) +
         linha('WhatsApp', dados.whatsapp) +
         linha('E-mail', dados.email) +
         linha('Grupo', dados.grupo) +
       '</table>' +
-      '<p style="font-size:16px;margin-top:16px">Total de inscritas: <b style="color:#ec2a8f">' + total + '</b></p>' +
-      '<p><a href="' + urlPlanilha + '" style="color:#ec2a8f">Abrir a planilha completa</a></p>' +
+      '<p style="font-size:16px;margin-top:16px">Total de inscritas: <b style="color:#af7569">' + total + '</b></p>' +
+      '<p><a href="' + urlPlanilha + '" style="color:#af7569">Abrir a planilha completa</a></p>' +
     '</div>';
   MailApp.sendEmail({ to: EMAIL_AVISO, subject: assunto, htmlBody: html, name: REMETENTE });
 }
