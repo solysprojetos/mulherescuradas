@@ -186,6 +186,19 @@
     border-color:var(--pink);background:rgba(236,42,143,.08);
   }
 
+  /* assinatura de rodape com as logos */
+  .assinatura{
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    margin-top:40px;padding-top:26px;
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+  .assinatura .sig-mc{width:52px;height:auto;opacity:.85}
+  .assinatura .sig-wm{width:150px;height:auto;opacity:.9;margin-top:2px}
+  .assinatura span{
+    color:var(--muted);font-size:12px;letter-spacing:1.5px;
+    text-transform:uppercase;margin-top:2px;
+  }
+
   /* mensagens de status do formulario */
   .msg{margin-top:16px;text-align:center;font-size:14px;font-weight:600;min-height:20px}
   .msg.erro{color:#ff7a9c}
@@ -461,6 +474,12 @@
       </a>
       <p>Nos vemos lá! ✨</p>
     </div>
+
+    <footer class="assinatura">
+      <img class="sig-mc" src="mc-monograma.png" alt="Monograma Mulheres Curadas">
+      <img class="sig-wm" src="wordmark-mulheres-curadas.png" alt="Mulheres Curadas">
+      <span>por Karoline Rodrigues</span>
+    </footer>
   </div>
 
   <script>
