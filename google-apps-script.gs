@@ -124,13 +124,23 @@ function limparTestesEFormatar() {
 // ===== DISPARO: e-mail com a arte da semana =====
 function enviarBomInicioDeSemana() {
   var ss  = SpreadsheetApp.getActiveSpreadsheet();
-  var aba = ss.getSheetByName('Inscrições') || ss.getSheets()[0];
+  var aba = ss.getSheetByName(NOME_ABA) || ss.getSheets()[0];
   var valores = aba.getDataRange().getValues();
   var IMG_URL = 'https://mulherescuradas.institutoabner.com.br/semana-mulheres-curadas.jpg';
   var imagem  = UrlFetchApp.fetch(IMG_URL).getBlob().setName('semana.jpg');
   var assunto = '💖 Que Deus abençoe a sua semana!';
   var testes  = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var html =
+    '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;text-align:center">' +
+      '<img src="cid:semana" style="width:100%;display:block;border-radius:12px" alt="Mulheres Curadas">' +
+      '<p style="font-size:14px;color:#8a7168;margin-top:12px">Com carinho, Mulheres Curadas 💖</p>' +
+    '</div>';
+  function enviar(dest) {
+    MailApp.sendEmail({ to: dest, subject: assunto, htmlBody: html, name: 'Mulheres Curadas', inlineImages: { semana: imagem } });
+  }
   var jaEnviei = {}, total = 0;
+  enviar(EMAIL_AVISO);
+  jaEnviei[EMAIL_AVISO.toLowerCase()] = true;
   for (var i = 1; i < valores.length; i++) {
     var nome  = String(valores[i][1] || '').trim();
     var email = String(valores[i][3] || '').trim();
@@ -139,13 +149,9 @@ function enviarBomInicioDeSemana() {
     if (testes.indexOf(nome.toLowerCase()) !== -1) continue;
     if (jaEnviei[chave]) continue;
     jaEnviei[chave] = true;
-    var html =
-      '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">' +
-        '<img src="cid:semana" style="width:100%;display:block;border-radius:12px" alt="Mulheres Curadas">' +
-      '</div>';
-    MailApp.sendEmail({ to: email, subject: assunto, htmlBody: html, name: 'Mulheres Curadas', inlineImages: { semana: imagem } });
+    enviar(email);
     total++;
     Utilities.sleep(300);
   }
-  Logger.log('Disparo enviado para ' + total + ' pessoas.');
+  Logger.log('Disparo enviado para ' + total + ' inscritas (+ copia para voce).');
 }
