@@ -35,16 +35,21 @@
   body{
     font-family:'Poppins',sans-serif;
     -webkit-tap-highlight-color:transparent;
-    background:
-      radial-gradient(120% 60% at 50% 0%, rgba(236,42,143,.28), transparent 60%),
-      var(--bg);
+    background:var(--bg);
     color:var(--text);
     min-height:100vh;
     display:flex;
     justify-content:center;
     padding:28px 16px 60px;
   }
-  .wrap{width:100%;max-width:520px}
+  /* papel de parede floral fixo atras de todo o conteudo */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;
+    background:
+      linear-gradient(180deg, rgba(18,10,23,.38), rgba(18,10,23,.60)),
+      url("fundo-mulheres-curadas.jpg") center center / cover no-repeat;
+  }
+  .wrap{width:100%;max-width:520px;position:relative;z-index:1}
 
   .badge{
     display:inline-flex;align-items:center;gap:8px;
@@ -126,8 +131,9 @@
   }
 
   .form{
-    background:var(--card);
-    border:1px solid var(--border);
+    background:rgba(27,17,32,.86);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    border:1px solid rgba(236,42,143,.18);
     border-radius:22px;
     padding:36px 28px;
     transition:filter .5s, opacity .5s;
