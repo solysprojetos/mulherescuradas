@@ -106,3 +106,46 @@ function resposta(obj) {
 function doGet() {
   return ContentService.createTextOutput('OK - servico de inscricoes ativo.');
 }
+
+// ===== Limpa testes e formata as datas (rode 1x) =====
+function limparTestesEFormatar() {
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getSheetByName('Inscrições') || ss.getSheets()[0];
+  var testes = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var valores = aba.getDataRange().getValues();
+  for (var i = valores.length - 1; i >= 1; i--) {
+    var nome = String(valores[i][1] || '').toLowerCase().trim();
+    if (testes.indexOf(nome) !== -1) aba.deleteRow(i + 1);
+  }
+  var ult = aba.getLastRow();
+  if (ult > 1) aba.getRange(2, 1, ult - 1, 1).setNumberFormat('dd/MM/yyyy HH:mm');
+}
+
+// ===== DISPARO: e-mail com a arte da semana =====
+function enviarBomInicioDeSemana() {
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getSheetByName('Inscrições') || ss.getSheets()[0];
+  var valores = aba.getDataRange().getValues();
+  var IMG_URL = 'https://mulherescuradas.institutoabner.com.br/semana-mulheres-curadas.jpg';
+  var imagem  = UrlFetchApp.fetch(IMG_URL).getBlob().setName('semana.jpg');
+  var assunto = '💖 Que Deus abençoe a sua semana!';
+  var testes  = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var jaEnviei = {}, total = 0;
+  for (var i = 1; i < valores.length; i++) {
+    var nome  = String(valores[i][1] || '').trim();
+    var email = String(valores[i][3] || '').trim();
+    var chave = email.toLowerCase();
+    if (!email || email.indexOf('@') === -1) continue;
+    if (testes.indexOf(nome.toLowerCase()) !== -1) continue;
+    if (jaEnviei[chave]) continue;
+    jaEnviei[chave] = true;
+    var html =
+      '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">' +
+        '<img src="cid:semana" style="width:100%;display:block;border-radius:12px" alt="Mulheres Curadas">' +
+      '</div>';
+    MailApp.sendEmail({ to: email, subject: assunto, htmlBody: html, name: 'Mulheres Curadas', inlineImages: { semana: imagem } });
+    total++;
+    Utilities.sleep(300);
+  }
+  Logger.log('Disparo enviado para ' + total + ' pessoas.');
+}
