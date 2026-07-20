@@ -192,7 +192,13 @@
     margin-top:40px;padding-top:26px;
     border-top:1px solid rgba(255,255,255,.08);
   }
-  .assinatura .sig-mc{width:52px;height:auto;opacity:.85}
+  .assinatura .sig-mc{width:56px;height:auto;opacity:.95}
+
+  /* brasoes nas laterais do topo (na altura do selo, sem tocar o titulo) */
+  .brasao{position:absolute;top:-8px;width:34px;height:auto;opacity:.5;z-index:0;pointer-events:none}
+  .brasao.esq{left:0}
+  .brasao.dir{right:0}
+  @media(max-width:400px){ .brasao{width:30px} }
   .assinatura .sig-wm{width:150px;height:auto;opacity:.9;margin-top:2px}
   .assinatura span{
     color:var(--muted);font-size:12px;letter-spacing:1.5px;
@@ -368,6 +374,8 @@
   </div>
 
   <div class="wrap">
+    <img class="brasao esq" src="mc-monograma-claro.png" alt="">
+    <img class="brasao dir" src="mc-monograma-claro.png" alt="">
     <div class="center">
       <span class="badge">
         <span class="btxt">Convite Exclusivo</span>
@@ -476,7 +484,7 @@
     </div>
 
     <footer class="assinatura">
-      <img class="sig-mc" src="mc-monograma.png" alt="Monograma Mulheres Curadas">
+      <img class="sig-mc" src="mc-monograma-claro.png" alt="Monograma Mulheres Curadas">
       <img class="sig-wm" src="wordmark-mulheres-curadas.png" alt="Mulheres Curadas">
       <span>por Karoline Rodrigues</span>
     </footer>
