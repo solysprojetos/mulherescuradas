@@ -13,22 +13,23 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#ec2a8f">
+<meta name="theme-color" content="#c88a80">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#120a17;
-    --card:#1b1120;
-    --card-2:#241528;
-    --pink:#ec2a8f;
-    --pink-2:#ff4fa3;
-    --orange:#f6b26b;
-    --text:#f4eef6;
-    --muted:#9a8aa5;
-    --border:rgba(255,255,255,.08);
-    --input:#241a2c;
+    /* paleta oficial Mulheres Curadas: nude #EDD6C4, rosa #EFAEC4, terracota #AF7569 */
+    --bg:#170f0d;
+    --card:#221715;
+    --card-2:#2c1e1a;
+    --pink:#c88a80;      /* rosa-queimado (accent principal) */
+    --pink-2:#efaec4;    /* rosa suave */
+    --orange:#edd6c4;    /* nude */
+    --text:#f6efe9;
+    --muted:#b6a498;
+    --border:rgba(255,255,255,.09);
+    --input:#2a1d1a;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
@@ -46,7 +47,7 @@
   body::before{
     content:"";position:fixed;inset:0;z-index:0;
     background:
-      linear-gradient(180deg, rgba(18,10,23,.38), rgba(18,10,23,.60)),
+      linear-gradient(180deg, rgba(23,15,13,.38), rgba(23,15,13,.60)),
       url("fundo-mulheres-curadas.jpg") center center / cover no-repeat;
   }
   .wrap{width:100%;max-width:520px;position:relative;z-index:1}
@@ -82,7 +83,7 @@
     width:fit-content;max-width:100%;
     margin:0 auto 28px;
     border:1px solid var(--border);
-    box-shadow:0 10px 50px rgba(236,42,143,.18);
+    box-shadow:0 10px 50px rgba(175,117,105,.18);
   }
   .video video{
     display:block;width:auto;max-width:100%;height:auto;border-radius:22px;
@@ -95,8 +96,8 @@
   /* aviso enquanto o vídeo não termina */
   .locknote{
     display:flex;align-items:center;gap:14px;
-    background:rgba(236,42,143,.08);
-    border:1px solid rgba(236,42,143,.3);
+    background:rgba(175,117,105,.08);
+    border:1px solid rgba(175,117,105,.3);
     border-radius:16px;padding:16px 18px;margin-bottom:22px;
   }
   .locknote svg{width:26px;height:26px;flex:0 0 auto;fill:var(--pink-2)}
@@ -109,8 +110,8 @@
 
   /* cartao com data e local, aparece quando o video termina */
   .evento-card{
-    background:rgba(236,42,143,.08);
-    border:1px solid rgba(236,42,143,.3);
+    background:rgba(175,117,105,.08);
+    border:1px solid rgba(175,117,105,.3);
     border-radius:16px;padding:6px 18px;margin-bottom:22px;
     animation:reveal .6s ease both;
   }
@@ -131,15 +132,15 @@
   }
 
   .form{
-    background:rgba(27,17,32,.86);
+    background:rgba(34,23,21,.86);
     -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-    border:1px solid rgba(236,42,143,.18);
+    border:1px solid rgba(175,117,105,.18);
     border-radius:22px;
     padding:36px 28px;
     transition:filter .5s, opacity .5s;
   }
   .form h2{text-align:center;font-size:30px;font-weight:700;margin-bottom:8px}
-  .form .hint{text-align:center;color:#8f7fb0;font-size:15px;margin-bottom:28px}
+  .form .hint{text-align:center;color:var(--muted);font-size:15px;margin-bottom:28px}
   label{display:block;font-weight:600;font-size:15px;margin:18px 0 8px}
   input{
     width:100%;padding:16px 18px;border-radius:12px;
@@ -148,12 +149,12 @@
     font-size:16px; /* 16px+ evita o zoom automatico do iPhone ao tocar no campo */
     transition:border-color .2s, box-shadow .2s;
   }
-  input::placeholder{color:#6f6079}
-  input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,42,143,.2)}
+  input::placeholder{color:#8a7168}
+  input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(175,117,105,.2)}
   .submit{
     width:100%;margin-top:28px;padding:17px;border:none;border-radius:12px;
     background:linear-gradient(90deg,var(--pink),var(--pink-2) 55%,var(--orange));
-    color:#fff;font-family:inherit;font-weight:700;font-size:17px;cursor:pointer;
+    color:#4a2c26;font-family:inherit;font-weight:700;font-size:17px;cursor:pointer;
     transition:opacity .2s, transform .1s;
   }
   .submit:hover{opacity:.92}
@@ -167,11 +168,11 @@
     background:var(--input);border:1px solid var(--border);
     transition:border-color .2s, background .2s;
   }
-  .radio-opt:hover{border-color:rgba(236,42,143,.5)}
+  .radio-opt:hover{border-color:rgba(175,117,105,.5)}
   .radio-opt input{display:none}
   .radio-opt .dot{
     width:22px;height:22px;flex:0 0 auto;border-radius:50%;
-    border:2px solid #6f6079;position:relative;transition:border-color .2s;
+    border:2px solid #8a7168;position:relative;transition:border-color .2s;
   }
   .radio-opt .dot::after{
     content:"";position:absolute;inset:4px;border-radius:50%;
@@ -183,7 +184,7 @@
   .radio-opt input:checked ~ .dot{border-color:var(--pink)}
   .radio-opt input:checked ~ .dot::after{transform:scale(1)}
   .radio-opt:has(input:checked){
-    border-color:var(--pink);background:rgba(236,42,143,.08);
+    border-color:var(--pink);background:rgba(175,117,105,.08);
   }
 
   /* assinatura de rodape com as logos */
@@ -198,7 +199,9 @@
   .brasao{position:absolute;top:-8px;width:34px;height:auto;opacity:.5;z-index:0;pointer-events:none}
   .brasao.esq{left:0}
   .brasao.dir{right:0}
-  @media(max-width:400px){ .brasao{width:30px} }
+  .carta-overlay .brasao{top:18px;left:14px;width:40px;opacity:.55}
+  .carta-overlay .brasao.dir{left:auto;right:14px}
+  @media(max-width:400px){ .brasao{width:30px} .carta-overlay .brasao{width:34px} }
   .assinatura .sig-wm{width:150px;height:auto;opacity:.9;margin-top:2px}
   .assinatura span{
     color:var(--muted);font-size:12px;letter-spacing:1.5px;
@@ -214,7 +217,7 @@
 
   /* tela de sucesso apos inscricao */
   .success{
-    background:var(--card);border:1px solid rgba(236,42,143,.35);
+    background:var(--card);border:1px solid rgba(175,117,105,.35);
     border-radius:22px;padding:44px 28px;text-align:center;animation:reveal .5s ease both;
   }
   .success .check{
@@ -246,7 +249,7 @@
     position:fixed;inset:0;z-index:50;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
     background:
-      linear-gradient(180deg, rgba(18,10,23,.44), rgba(18,10,23,.66)),
+      linear-gradient(180deg, rgba(23,15,13,.44), rgba(23,15,13,.66)),
       url("fundo-mulheres-curadas.jpg") center center / cover no-repeat;
     transition:opacity .6s ease, visibility .6s;
   }
@@ -270,9 +273,9 @@
   /* corpo do envelope */
   .env-corpo{
     position:absolute;inset:0;border-radius:10px;
-    background:linear-gradient(160deg,#2b1631,#241528);
-    border:1px solid rgba(236,42,143,.35);
-    box-shadow:0 18px 60px rgba(236,42,143,.25);
+    background:linear-gradient(160deg,#2c1d1a,#221715);
+    border:1px solid rgba(175,117,105,.35);
+    box-shadow:0 18px 60px rgba(175,117,105,.25);
   }
   /* bolso frontal (triangulos laterais e de baixo) */
   .env-bolso{
@@ -280,14 +283,14 @@
   }
   .env-bolso::before{
     content:"";position:absolute;inset:0;
-    background:linear-gradient(160deg,#341a3b,#2b1631);
+    background:linear-gradient(160deg,#392621,#2c1d1a);
     clip-path:polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
     border-radius:10px;
   }
   /* aba de cima (abre girando) */
   .env-aba{
     position:absolute;left:0;top:0;width:100%;height:55%;z-index:4;
-    background:linear-gradient(180deg,#3d1e46,#341a3b);
+    background:linear-gradient(180deg,#45312b,#392621);
     clip-path:polygon(0 0, 100% 0, 50% 100%);
     border-radius:10px 10px 0 0;
     transform-origin:top center;
@@ -300,7 +303,7 @@
     width:56px;height:56px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
     background:linear-gradient(135deg,var(--pink),var(--orange));
-    box-shadow:0 6px 20px rgba(236,42,143,.5);
+    box-shadow:0 6px 20px rgba(175,117,105,.5);
     font-size:26px;transition:opacity .4s, transform .4s;
   }
   .envelope.aberto .env-lacre{opacity:0;transform:translate(-50%,-50%) scale(.4)}
@@ -321,7 +324,7 @@
   .carta-logo{
     width:min(70vw,290px);border-radius:22px;display:block;
     border:1px solid rgba(255,255,255,.1);
-    box-shadow:0 16px 60px rgba(236,42,143,.35);
+    box-shadow:0 16px 60px rgba(175,117,105,.35);
   }
 
   /* ajustes para celular */
@@ -357,6 +360,8 @@
 
   <!-- tela de abertura: a carta -->
   <div id="cartaOverlay" class="carta-overlay">
+    <img class="brasao esq" src="mc-monograma-claro.png" alt="">
+    <img class="brasao dir" src="mc-monograma-claro.png" alt="">
     <img class="carta-logo" src="capa-mulheres-curadas-v2.jpg" alt="Mulheres Curadas por Karoline Rodrigues">
     <p class="carta-titulo">Você recebeu um convite especial</p>
     <div id="envelope" class="envelope" role="button" aria-label="Abrir convite" tabindex="0">
