@@ -1,0 +1,17 @@
+name: Testa inscricao (envia e-mail de teste)
+
+on: workflow_dispatch
+
+jobs:
+  testar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar inscricao de teste ao Apps Script
+        run: |
+          URL="https://script.google.com/macros/s/AKfycbwa2jGLDt2H690COhdR-tuwE6iXVcu6eTug3nGeHMNS7JD3FiXWc-SCkxviSReRKWU4_g/exec"
+          echo "== GET (servico ativo?) =="
+          curl -sS -L "$URL" -w "\nhttp: %{http_code}\n" | head -5
+          echo "== POST (inscricao de teste) =="
+          curl -sS -L -X POST -H "Content-Type: application/json" \
+            -d '{"nome":"TESTE Cores e Local","whatsapp":"(85) 90000-0000","email":"solysprojetos@gmail.com","grupo":"CONVIDADAS"}' \
+            "$URL" -w "\nhttp: %{http_code}\n"
