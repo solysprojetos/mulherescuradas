@@ -149,3 +149,48 @@ function enviarBomInicioDeSemana() {
   }
   Logger.log('Disparo enviado para ' + total + ' pessoas.');
 }
+
+// ===== DISPARO: contagem regressiva "Faltam 5 dias" =====
+function enviarFalta5Dias() {
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getSheetByName('Inscrições') || ss.getSheets()[0];
+  var valores = aba.getDataRange().getValues();
+  var IMG_URL = 'https://mulherescuradas.institutoabner.com.br/falta-5-dias-mulheres-curadas.jpg';
+  var imagem  = UrlFetchApp.fetch(IMG_URL).getBlob().setName('falta5dias.jpg');
+  var assunto = '🌸 Faltam apenas 5 dias para o Mulheres Curadas!';
+  var testes  = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var jaEnviei = {}, total = 0;
+  for (var i = 1; i < valores.length; i++) {
+    var nome  = String(valores[i][1] || '').trim();
+    var email = String(valores[i][3] || '').trim();
+    var chave = email.toLowerCase();
+    if (!email || email.indexOf('@') === -1) continue;
+    if (testes.indexOf(nome.toLowerCase()) !== -1) continue;
+    if (jaEnviei[chave]) continue;
+    jaEnviei[chave] = true;
+    var html =
+      '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#170f0d;color:#f4eef6;border-radius:16px;overflow:hidden">' +
+        '<img src="cid:arte" style="width:100%;display:block" alt="Faltam 5 dias - Mulheres Curadas">' +
+        '<div style="padding:26px 24px">' +
+          '<p style="font-size:18px;text-align:center;color:#c88a80;margin:0 0 18px"><b>🌸 Faltam apenas 5 dias! 🌸</b></p>' +
+          '<p style="font-size:15px;line-height:1.7;color:#ddccc2">Está chegando o momento de vivermos um encontro transformador. O <b style="color:#c88a80">Mulheres Curadas</b> foi preparado com muito amor, oração e propósito para cada mulher que deseja experimentar cura, restauração e um novo tempo na presença de Deus.</p>' +
+          '<p style="font-size:15px;line-height:1.7;color:#ddccc2">✨ Reserve esta data e permita-se viver essa experiência. Deus tem algo especial preparado para a sua vida!</p>' +
+          '<div style="background:#221715;border:1px solid rgba(175,117,105,.4);border-radius:12px;padding:16px 20px;margin:18px 0">' +
+            '<p style="margin:6px 0;font-size:15px">📍 <b style="color:#c88a80">Local:</b> CC Visão Profética</p>' +
+            '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#ddccc2">Av. dos Marinheiros, 319 – Cidade Nova, Maracanaú.</p>' +
+            '<p style="margin:12px 0 6px;font-size:15px">🕕 <b style="color:#c88a80">Horário:</b> Às 18h00.</p>' +
+            '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#ddccc2">Iniciaremos pontualmente, por isso chegue com antecedência para que possamos começar juntas esse momento tão especial.</p>' +
+          '</div>' +
+          '<p style="font-size:15px;text-align:center;color:#c88a80;margin:18px 0">💖 Esperamos por você!</p>' +
+          '<p style="font-size:14px;line-height:1.6;color:#ddccc2;font-style:italic;text-align:center;border-top:1px solid rgba(175,117,105,.3);padding-top:16px;margin-top:16px">' +
+            '"Dar-vos-ei um coração novo e porei dentro de vós um espírito novo."<br>' +
+            '<span style="color:#c88a80;font-style:normal">Ezequiel 36:26</span>' +
+          '</p>' +
+        '</div>' +
+      '</div>';
+    MailApp.sendEmail({ to: email, subject: assunto, htmlBody: html, name: 'Mulheres Curadas', inlineImages: { arte: imagem } });
+    total++;
+    Utilities.sleep(300);
+  }
+  Logger.log('Disparo "Faltam 5 dias" enviado para ' + total + ' pessoas.');
+}
