@@ -31,10 +31,10 @@ function doPost(e) {
 
     aba.appendRow([
       new Date(),
-      dados.nome     || '',
-      dados.whatsapp || '',
-      dados.email    || '',
-      dados.grupo    || ''
+      padronizarNome(dados.nome),
+      padronizarWhatsapp(dados.whatsapp),
+      padronizarEmail(dados.email),
+      padronizarGrupo(dados.grupo)
     ]);
 
     var total = aba.getLastRow() - 1; // desconta o cabecalho
@@ -107,18 +107,84 @@ function doGet() {
   return ContentService.createTextOutput('OK - servico de inscricoes ativo.');
 }
 
-// ===== Limpa testes e formata as datas (rode 1x) =====
-function limparTestesEFormatar() {
+// ===== PADRONIZADORES (deixam cada campo no padrão) =====
+// Nome: sem espaços sobrando e em MAIÚSCULO
+function padronizarNome(v) {
+  return String(v || '').replace(/\s+/g, ' ').trim().toUpperCase();
+}
+// E-mail: sem espaços e em minúsculo
+function padronizarEmail(v) {
+  return String(v || '').replace(/\s+/g, '').toLowerCase();
+}
+// Grupo: casing canônico dos grupos conhecidos
+function padronizarGrupo(v) {
+  var g = String(v || '').replace(/\s+/g, ' ').trim();
+  var mapa = { 'sgroup': 'SGroup', 'solys': 'Solys', 'convidada': 'Convidada' };
+  return mapa[g.toLowerCase()] || g;
+}
+// WhatsApp: (DD) 9XXXX-XXXX  (aceita com/sem +55, espaços, traços, parênteses)
+function padronizarWhatsapp(v) {
+  var d = String(v || '').replace(/\D/g, '');
+  if (d.length > 11 && d.indexOf('55') === 0) d = d.slice(d.length - 11); // remove +55
+  if (d.length === 11) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+  if (d.length === 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+  return String(v || '').trim(); // formato inesperado: mantém como veio
+}
+
+// ===== ORGANIZA A PLANILHA (rode 1x para arrumar tudo que já está lá) =====
+// Padroniza todos os campos, remove linhas de teste e duplicadas (por e-mail),
+// formata as datas, ordena por nome e deixa o visual no padrão.
+function organizarPlanilha() {
   var ss  = SpreadsheetApp.getActiveSpreadsheet();
-  var aba = ss.getSheetByName('Inscrições') || ss.getSheets()[0];
-  var testes = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
-  var valores = aba.getDataRange().getValues();
-  for (var i = valores.length - 1; i >= 1; i--) {
-    var nome = String(valores[i][1] || '').toLowerCase().trim();
-    if (testes.indexOf(nome) !== -1) aba.deleteRow(i + 1);
-  }
+  var aba = ss.getSheetByName(NOME_ABA) || ss.getSheets()[0];
   var ult = aba.getLastRow();
-  if (ult > 1) aba.getRange(2, 1, ult - 1, 1).setNumberFormat('dd/MM/yyyy HH:mm');
+
+  // cabeçalho no padrão
+  aba.getRange(1, 1, 1, 5)
+     .setValues([['Data/Hora', 'Nome', 'WhatsApp', 'E-mail', 'Grupo']])
+     .setFontWeight('bold');
+  if (ult < 2) { aba.setFrozenRows(1); return; } // só cabeçalho
+
+  var testes = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var dados  = aba.getRange(2, 1, ult - 1, 5).getValues();
+  var limpos = [];
+  var vistos = {}; // controle de duplicadas
+
+  for (var i = 0; i < dados.length; i++) {
+    var nome  = padronizarNome(dados[i][1]);
+    var email = padronizarEmail(dados[i][3]);
+
+    if (!nome && !email) continue;                            // linha vazia
+    if (testes.indexOf(nome.toLowerCase()) !== -1) continue;  // teste
+    var chave = email || nome.toLowerCase();
+    if (vistos[chave]) continue;                              // duplicada
+    vistos[chave] = true;
+
+    limpos.push([
+      dados[i][0],
+      nome,
+      padronizarWhatsapp(dados[i][2]),
+      email,
+      padronizarGrupo(dados[i][4])
+    ]);
+  }
+
+  // ordena por nome (alfabético pt-BR)
+  limpos.sort(function (a, b) {
+    return String(a[1]).localeCompare(String(b[1]), 'pt-BR');
+  });
+
+  // regrava o corpo já organizado
+  aba.getRange(2, 1, ult - 1, 5).clearContent();
+  if (limpos.length) {
+    aba.getRange(2, 1, limpos.length, 5).setValues(limpos);
+    aba.getRange(2, 1, limpos.length, 1).setNumberFormat('dd/MM/yyyy HH:mm');
+  }
+
+  aba.setFrozenRows(1);
+  aba.autoResizeColumns(1, 5);
+  SpreadsheetApp.flush();
+  Logger.log('Planilha organizada: ' + limpos.length + ' inscrição(ões).');
 }
 
 // ===== DISPARO: e-mail com a arte da semana =====

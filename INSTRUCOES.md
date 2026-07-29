@@ -61,6 +61,20 @@ Tudo fica na planilha, uma linha por pessoa, com data/hora. Você pode:
 
 ---
 
+## Organizar a planilha (padronizar tudo)
+As novas inscrições já entram no padrão automaticamente (nome em **MAIÚSCULO**,
+WhatsApp como `(85) 99999-9999`, e-mail em minúsculo). Para arrumar de uma vez o
+que já está na planilha:
+1. Abra **Extensões → Apps Script**.
+2. No topo, no seletor de função, escolha **`organizarPlanilha`**.
+3. Clique em **Executar** ▶️.
+
+Ela padroniza todos os campos, remove linhas de teste e duplicadas (mesmo
+e-mail), formata as datas, ordena por nome e congela o cabeçalho. Pode rodar
+quantas vezes quiser, sem risco.
+
+---
+
 ## Publicar a página na internet (grátis, opcional)
 A página é um site estático — dá para publicar no **GitHub Pages**:
 1. No GitHub, vá em **Settings → Pages**.
