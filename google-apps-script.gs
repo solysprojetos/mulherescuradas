@@ -169,9 +169,14 @@ function organizarPlanilha() {
     ]);
   }
 
-  // ordena por nome (alfabético pt-BR)
+  // ordena por setor (grupo) -> nome -> data
   limpos.sort(function (a, b) {
-    return String(a[1]).localeCompare(String(b[1]), 'pt-BR');
+    var porSetor = String(a[4]).localeCompare(String(b[4]), 'pt-BR');
+    if (porSetor !== 0) return porSetor;
+    var porNome = String(a[1]).localeCompare(String(b[1]), 'pt-BR');
+    if (porNome !== 0) return porNome;
+    return (a[0] instanceof Date ? a[0].getTime() : 0) -
+           (b[0] instanceof Date ? b[0].getTime() : 0);
   });
 
   // regrava o corpo já organizado

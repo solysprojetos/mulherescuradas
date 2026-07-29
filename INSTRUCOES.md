@@ -70,8 +70,8 @@ que já está na planilha:
 3. Clique em **Executar** ▶️.
 
 Ela padroniza todos os campos, remove linhas de teste e duplicadas (mesmo
-e-mail), formata as datas, ordena por nome e congela o cabeçalho. Pode rodar
-quantas vezes quiser, sem risco.
+e-mail), formata as datas, **ordena por setor → nome → data** e congela o
+cabeçalho. Pode rodar quantas vezes quiser, sem risco.
 
 ---
 
