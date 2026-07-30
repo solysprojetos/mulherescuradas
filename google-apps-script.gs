@@ -267,45 +267,95 @@ function enviarFalta5Dias() {
 }
 
 // ===== DISPARO: contagem regressiva "Faltam 2 dias" =====
+var ASSUNTO_2DIAS = '🌸 Faltam apenas 2 dias para o Mulheres Curadas!';
+
+// limpa lixo no fim do e-mail (ponto, vírgula, espaço) e valida o formato
+function limparEmail_(e) {
+  return String(e || '').trim().replace(/[.,;\s]+$/, '');
+}
+function emailValido_(e) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+}
+
+// monta o HTML do e-mail (usado pelas duas funções abaixo)
+function htmlFalta2Dias_() {
+  return '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#170f0d;color:#f4eef6;border-radius:16px;overflow:hidden">' +
+      '<div style="padding:28px 26px;background:linear-gradient(90deg,#af7569,#c88a80,#d9a898);text-align:center">' +
+        '<h1 style="margin:0;font-size:24px;color:#fff">🌸 Faltam apenas 2 dias! 🌸</h1>' +
+      '</div>' +
+      '<div style="padding:26px 24px">' +
+        '<p style="font-size:15px;line-height:1.7;color:#ddccc2">Está chegando o momento de vivermos um encontro transformador. O <b style="color:#c88a80">Mulheres Curadas</b> foi preparado com muito amor, oração e propósito para cada mulher que deseja experimentar cura, restauração e um novo tempo na presença de Deus.</p>' +
+        '<p style="font-size:15px;line-height:1.7;color:#ddccc2">✨ Reserve esta data e permita-se viver essa experiência. Deus tem algo especial preparado para a sua vida!</p>' +
+        '<div style="background:#221715;border:1px solid rgba(175,117,105,.4);border-radius:12px;padding:16px 20px;margin:18px 0">' +
+          '<p style="margin:6px 0;font-size:15px">📍 <b style="color:#c88a80">Local:</b> CC Visão Profética</p>' +
+          '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#ddccc2">Av. dos Marinheiros, 319 – Cidade Nova, Maracanaú.</p>' +
+          '<p style="margin:12px 0 6px;font-size:15px">🕕 <b style="color:#c88a80">Horário:</b> Às 18h00.</p>' +
+          '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#ddccc2">Iniciaremos pontualmente, por isso chegue com antecedência para que possamos começar juntas esse momento tão especial.</p>' +
+        '</div>' +
+        '<p style="font-size:15px;text-align:center;color:#c88a80;margin:18px 0">💖 Esperamos por você!</p>' +
+        '<p style="font-size:14px;line-height:1.6;color:#ddccc2;font-style:italic;text-align:center;border-top:1px solid rgba(175,117,105,.3);padding-top:16px;margin-top:16px">' +
+          '"Dar-vos-ei um coração novo e porei dentro de vós um espírito novo."<br>' +
+          '<span style="color:#c88a80;font-style:normal">Ezequiel 36:26</span>' +
+        '</p>' +
+      '</div>' +
+    '</div>';
+}
+
+// Dispara para TODA a planilha (limpa e-mails e pula os invalidos sem travar)
 function enviarFalta2Dias() {
   var ss  = SpreadsheetApp.getActiveSpreadsheet();
   var aba = ss.getSheetByName('Inscrições') || ss.getSheets()[0];
   var valores = aba.getDataRange().getValues();
-  var assunto = '🌸 Faltam apenas 2 dias para o Mulheres Curadas!';
   var testes  = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
-  var jaEnviei = {}, total = 0;
+  var html = htmlFalta2Dias_();
+  var jaEnviei = {}, total = 0, pulados = 0;
   for (var i = 1; i < valores.length; i++) {
     var nome  = String(valores[i][1] || '').trim();
-    var email = String(valores[i][3] || '').trim();
+    var email = limparEmail_(valores[i][3]);
     var chave = email.toLowerCase();
-    if (!email || email.indexOf('@') === -1) continue;
+    if (!emailValido_(email)) { if (email) { pulados++; Logger.log('E-mail invalido pulado: ' + email + ' (' + nome + ')'); } continue; }
     if (testes.indexOf(nome.toLowerCase()) !== -1) continue;
     if (jaEnviei[chave]) continue;
     jaEnviei[chave] = true;
-    var html =
-      '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#170f0d;color:#f4eef6;border-radius:16px;overflow:hidden">' +
-        '<div style="padding:28px 26px;background:linear-gradient(90deg,#af7569,#c88a80,#d9a898);text-align:center">' +
-          '<h1 style="margin:0;font-size:24px;color:#fff">🌸 Faltam apenas 2 dias! 🌸</h1>' +
-        '</div>' +
-        '<div style="padding:26px 24px">' +
-          '<p style="font-size:15px;line-height:1.7;color:#ddccc2">Está chegando o momento de vivermos um encontro transformador. O <b style="color:#c88a80">Mulheres Curadas</b> foi preparado com muito amor, oração e propósito para cada mulher que deseja experimentar cura, restauração e um novo tempo na presença de Deus.</p>' +
-          '<p style="font-size:15px;line-height:1.7;color:#ddccc2">✨ Reserve esta data e permita-se viver essa experiência. Deus tem algo especial preparado para a sua vida!</p>' +
-          '<div style="background:#221715;border:1px solid rgba(175,117,105,.4);border-radius:12px;padding:16px 20px;margin:18px 0">' +
-            '<p style="margin:6px 0;font-size:15px">📍 <b style="color:#c88a80">Local:</b> CC Visão Profética</p>' +
-            '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#ddccc2">Av. dos Marinheiros, 319 – Cidade Nova, Maracanaú.</p>' +
-            '<p style="margin:12px 0 6px;font-size:15px">🕕 <b style="color:#c88a80">Horário:</b> Às 18h00.</p>' +
-            '<p style="margin:6px 0;font-size:14px;line-height:1.5;color:#ddccc2">Iniciaremos pontualmente, por isso chegue com antecedência para que possamos começar juntas esse momento tão especial.</p>' +
-          '</div>' +
-          '<p style="font-size:15px;text-align:center;color:#c88a80;margin:18px 0">💖 Esperamos por você!</p>' +
-          '<p style="font-size:14px;line-height:1.6;color:#ddccc2;font-style:italic;text-align:center;border-top:1px solid rgba(175,117,105,.3);padding-top:16px;margin-top:16px">' +
-            '"Dar-vos-ei um coração novo e porei dentro de vós um espírito novo."<br>' +
-            '<span style="color:#c88a80;font-style:normal">Ezequiel 36:26</span>' +
-          '</p>' +
-        '</div>' +
-      '</div>';
-    MailApp.sendEmail({ to: email, subject: assunto, htmlBody: html, name: 'Mulheres Curadas' });
-    total++;
+    try {
+      MailApp.sendEmail({ to: email, subject: ASSUNTO_2DIAS, htmlBody: html, name: 'Mulheres Curadas' });
+      total++;
+    } catch (err) {
+      pulados++;
+      Logger.log('Falhou para ' + email + ': ' + err);
+    }
     Utilities.sleep(300);
   }
-  Logger.log('Disparo "Faltam 2 dias" enviado para ' + total + ' pessoas.');
+  Logger.log('Disparo "Faltam 2 dias": ' + total + ' enviados, ' + pulados + ' pulados.');
+}
+
+// Envia SÓ para quem ainda não recebeu (a lista parou no e-mail com erro).
+// Use esta função depois da falha para não mandar duplicado para quem já recebeu.
+function enviarFalta2DiasRestantes() {
+  var restantes = [
+    'camilaaraujoribeiro0401@gmail.com', // tinha um ponto extra no fim (corrigido aqui)
+    'vitoria.lorinha29@gmail.com',
+    'hermanueleandrade@gmail.com',
+    'luanepaiva26@icloud.com',
+    'claudiana09paiva@gmail.com',
+    'cristinavalerio2811@gmail.com',
+    'biancadecastro15@gmail.com',
+    'amanda.1995diassousa@gmail.com',
+    'davidmarinho23@icloud.com'
+  ];
+  var html = htmlFalta2Dias_();
+  var total = 0, pulados = 0;
+  for (var i = 0; i < restantes.length; i++) {
+    var email = limparEmail_(restantes[i]);
+    if (!emailValido_(email)) { pulados++; continue; }
+    try {
+      MailApp.sendEmail({ to: email, subject: ASSUNTO_2DIAS, htmlBody: html, name: 'Mulheres Curadas' });
+      total++;
+    } catch (err) {
+      pulados++;
+      Logger.log('Falhou para ' + email + ': ' + err);
+    }
+    Utilities.sleep(300);
+  }
+  Logger.log('Disparo "Faltam 2 dias" (restantes): ' + total + ' enviados, ' + pulados + ' pulados.');
 }
