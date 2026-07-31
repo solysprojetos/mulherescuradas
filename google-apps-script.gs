@@ -10,6 +10,7 @@
 var NOME_EVENTO    = 'Mulheres Curadas';
 var REMETENTE      = 'Mulheres Curadas';           // nome que aparece como remetente
 var NOME_ABA       = 'Inscrições';                  // aba onde as inscrições são salvas
+var NOME_CONFERENCIA = 'Conferência';               // aba com a lista para conferir (check-in)
 var EMAIL_AVISO    = 'solysprojetos@gmail.com';     // quem recebe o aviso de nova inscrição
 var DATA_EVENTO    = '1º DE AGOSTO DE 2026 (SÁBADO), ÀS 18H';
 var LOCAL_EVENTO   = 'CC VISÃO PROFÉTICA, AV. DOS MARINHEIROS, 319, CIDADE NOVA, MARACANAÚ, CE';
@@ -190,6 +191,91 @@ function organizarPlanilha() {
   aba.autoResizeColumns(1, 5);
   SpreadsheetApp.flush();
   Logger.log('Planilha organizada: ' + limpos.length + ' inscrição(ões).');
+}
+
+// ===== MENU dentro da planilha (aparece ao abrir o arquivo) =====
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('🌸 Mulheres Curadas')
+    .addItem('Atualizar lista de conferência', 'montarListaConferencia')
+    .addItem('Organizar planilha de inscrições', 'organizarPlanilha')
+    .addToUi();
+}
+
+// ===== LISTA DE CONFERÊNCIA (check-in) =====
+// Cria/atualiza a aba "Conferência" com a lista organizada e uma caixinha
+// para marcar quem já foi conferido/chegou. Ao atualizar, NÃO perde as marcas.
+function montarListaConferencia() {
+  var ss     = SpreadsheetApp.getActiveSpreadsheet();
+  var origem = ss.getSheetByName(NOME_ABA) || ss.getSheets()[0];
+  var ult    = origem.getLastRow();
+
+  // guarda quem já estava marcado (por e-mail) para não perder ao atualizar
+  var marcados = {};
+  var conf = ss.getSheetByName(NOME_CONFERENCIA);
+  if (conf && conf.getLastRow() >= 2) {
+    var antigos = conf.getRange(2, 1, conf.getLastRow() - 1, 5).getValues();
+    for (var k = 0; k < antigos.length; k++) {
+      var em = String(antigos[k][4] || '').toLowerCase().trim();
+      if (em && antigos[k][0] === true) marcados[em] = true;
+    }
+  }
+
+  // lê e organiza as inscrições (padroniza, tira testes e nomes repetidos)
+  var testes = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var linhas = [];
+  if (ult >= 2) {
+    var dados = origem.getRange(2, 1, ult - 1, 5).getValues();
+    var vistos = {};
+    for (var i = 0; i < dados.length; i++) {
+      var nome  = padronizarNome(dados[i][1]);
+      var email = padronizarEmail(dados[i][3]);
+      if (!nome && !email) continue;                            // linha vazia
+      if (testes.indexOf(nome.toLowerCase()) !== -1) continue;  // teste
+      if (vistos[nome]) continue;                               // nome repetido
+      vistos[nome] = true;
+      linhas.push([
+        marcados[email] === true,        // A - Conferida (caixinha)
+        nome,                            // B - Nome
+        padronizarGrupo(dados[i][4]),    // C - Grupo
+        padronizarWhatsapp(dados[i][2]), // D - WhatsApp
+        email,                           // E - E-mail
+        dados[i][0]                      // F - Data/Hora
+      ]);
+    }
+    linhas.sort(function (a, b) {
+      var s = String(a[2]).localeCompare(String(b[2]), 'pt-BR'); // setor
+      if (s !== 0) return s;
+      return String(a[1]).localeCompare(String(b[1]), 'pt-BR');  // nome
+    });
+  }
+
+  // cria/limpa a aba de conferência
+  if (!conf) conf = ss.insertSheet(NOME_CONFERENCIA);
+  conf.clear();
+  conf.getRange(1, 1, 1, 6)
+      .setValues([['Conferida', 'Nome', 'Grupo', 'WhatsApp', 'E-mail', 'Data/Hora']])
+      .setFontWeight('bold');
+
+  if (linhas.length) {
+    conf.getRange(2, 1, linhas.length, 6).setValues(linhas);
+    conf.getRange(2, 1, linhas.length, 1).insertCheckboxes();
+    conf.getRange(2, 6, linhas.length, 1).setNumberFormat('dd/MM/yyyy HH:mm');
+  }
+
+  // contadores automáticos (à direita)
+  conf.getRange('H1').setValue('Total inscritas').setFontWeight('bold');
+  conf.getRange('I1').setFormula('=COUNTA(B2:B)');
+  conf.getRange('H2').setValue('Conferidas').setFontWeight('bold');
+  conf.getRange('I2').setFormula('=COUNTIF(A2:A,TRUE)');
+  conf.getRange('H3').setValue('Faltam').setFontWeight('bold');
+  conf.getRange('I3').setFormula('=I1-I2');
+
+  conf.setFrozenRows(1);
+  conf.autoResizeColumns(1, 6);
+  ss.setActiveSheet(conf);
+  SpreadsheetApp.flush();
+  Logger.log('Lista de conferência atualizada: ' + linhas.length + ' inscrição(ões).');
 }
 
 // ===== DISPARO: e-mail com a arte da semana =====
