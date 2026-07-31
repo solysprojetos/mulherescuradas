@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#c88a80">
+<title>Conferência 🌸 Mulheres Curadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#170f0d; --card:#221715; --card-2:#2c1e1a;
+    --pink:#c88a80; --pink-2:#efaec4; --nude:#edd6c4;
+    --text:#f6efe9; --muted:#b6a498; --border:rgba(255,255,255,.10);
+    --input:#2a1d1a; --ok:#6fcf97; --ok-bg:rgba(111,207,151,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);
+    min-height:100vh;padding:18px 14px 60px;-webkit-tap-highlight-color:transparent}
+  .wrap{width:100%;max-width:760px;margin:0 auto}
+  .grad{background:linear-gradient(90deg,var(--pink) 0%,var(--pink-2) 45%,var(--nude) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  header{text-align:center;margin-bottom:18px}
+  header img{max-width:230px;width:60%;height:auto;margin-bottom:6px}
+  header h1{font-size:22px;font-weight:800;letter-spacing:-.5px}
+  header .sub{color:var(--muted);font-size:13px;margin-top:2px}
+
+  /* cartoes de contagem */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center}
+  .card .n{font-size:26px;font-weight:800;line-height:1}
+  .card .l{font-size:12px;color:var(--muted);margin-top:5px}
+  .card.presentes .n{color:var(--ok)}
+
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  input.busca{flex:1;min-width:180px;background:var(--input);border:1px solid var(--border);
+    color:var(--text);border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px}
+  input.busca::placeholder{color:var(--muted)}
+  button.btn{background:linear-gradient(90deg,var(--pink),var(--pink-2));border:0;color:#241713;
+    font-weight:700;font-family:inherit;border-radius:12px;padding:12px 16px;font-size:14px;cursor:pointer}
+  button.ghost{background:var(--card);border:1px solid var(--border);color:var(--text)}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{background:var(--card);border:1px solid var(--border);color:var(--muted);
+    border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .chip.on{background:var(--pink);color:#241713;border-color:transparent}
+
+  .lista{display:flex;flex-direction:column;gap:9px}
+  .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:12px 14px}
+  .item.pres{background:var(--ok-bg);border-color:rgba(111,207,151,.4)}
+  .item .info{flex:1;min-width:0}
+  .item .nome{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item .meta{color:var(--muted);font-size:12px;margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .item .grp{background:var(--card-2);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:11px}
+  .item .meta a{color:var(--pink-2);text-decoration:none}
+  /* botao presente */
+  .toggle{flex-shrink:0;border:1px solid var(--border);background:var(--card-2);color:var(--muted);
+    border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+  .toggle.on{background:var(--ok);color:#12331f;border-color:transparent}
+
+  .msg{text-align:center;color:var(--muted);padding:30px 10px;font-size:14px}
+  .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
+
+  /* tela de senha */
+  .gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;z-index:10}
+  .gate .box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px 24px;max-width:360px;width:100%;text-align:center}
+  .gate h2{font-size:20px;font-weight:800;margin-bottom:6px}
+  .gate p{color:var(--muted);font-size:13px;margin-bottom:16px}
+  .gate input{width:100%;background:var(--input);border:1px solid var(--border);color:var(--text);
+    border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px;margin-bottom:10px;text-align:center}
+  .gate .erro{color:#e88;font-size:13px;min-height:18px;margin-bottom:6px}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+  <!-- ===== SENHA ===== -->
+  <div class="gate" id="gate">
+    <div class="box">
+      <h2 class="grad">🌸 Conferência</h2>
+      <p>Área da organização. Digite a senha para ver a lista de inscritas.</p>
+      <div class="erro" id="gateErro"></div>
+      <input type="password" id="senha" placeholder="Senha" autocomplete="off">
+      <button class="btn" id="entrar" style="width:100%">Entrar</button>
+    </div>
+  </div>
+
+  <!-- ===== CONTEUDO ===== -->
+  <div class="wrap hidden" id="app">
+    <header>
+      <img src="wordmark-mulheres-curadas.png" alt="Mulheres Curadas">
+      <h1 class="grad">Lista de conferência</h1>
+      <div class="sub" id="sub">Carregando…</div>
+    </header>
+
+    <div class="cards">
+      <div class="card"><div class="n" id="cTotal">–</div><div class="l">Inscritas</div></div>
+      <div class="card presentes"><div class="n" id="cPres">–</div><div class="l">Presentes</div></div>
+      <div class="card"><div class="n" id="cFalta">–</div><div class="l">Faltam</div></div>
+    </div>
+
+    <div class="toolbar">
+      <input class="busca" id="busca" placeholder="🔎 Buscar por nome, e-mail ou WhatsApp…">
+      <button class="btn ghost" id="recarregar">↻ Atualizar</button>
+    </div>
+    <div class="chips" id="chips"></div>
+
+    <div class="lista" id="lista"></div>
+    <div class="msg hidden" id="vazio">Nenhuma inscrita encontrada.</div>
+    <div class="foot" id="foot"></div>
+  </div>
+
+<script>
+  // URL do seu Apps Script (a mesma do formulario de inscricao)
+  var URL_API = "https://script.google.com/macros/s/AKfycbwa2jGLDt2H690COhdR-tuwE6iXVcu6eTug3nGeHMNS7JD3FiXWc-SCkxviSReRKWU4_g/exec";
+
+  var CHAVE = localStorage.getItem('mc_chave') || '';
+  var DADOS = [], FILTRO_GRUPO = 'Todos', BUSCA = '';
+
+  // ---- JSONP (busca a lista sem problema de CORS) ----
+  function carregar(chave){
+    return new Promise(function(resolve,reject){
+      var cb = 'mc_cb_' + Math.floor(Math.random()*1e9);
+      var s = document.createElement('script');
+      var to = setTimeout(function(){ limpar(); reject(new Error('timeout')); }, 15000);
+      function limpar(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(to); }
+      window[cb] = function(d){ limpar(); resolve(d); };
+      s.onerror = function(){ limpar(); reject(new Error('rede')); };
+      s.src = URL_API + '?lista=1&chave=' + encodeURIComponent(chave) + '&callback=' + cb + '&_=' + Date.now();
+      document.body.appendChild(s);
+    });
+  }
+
+  function marcarPresenca(email, presente){
+    // envio "fire and forget" (nao precisa esperar resposta)
+    fetch(URL_API, { method:'POST', mode:'no-cors',
+      body: JSON.stringify({ acao:'presenca', chave:CHAVE, email:email, presente:presente }) });
+  }
+
+  // ---- render ----
+  function contadores(){
+    var pres = DADOS.filter(function(x){return x.presente;}).length;
+    document.getElementById('cTotal').textContent = DADOS.length;
+    document.getElementById('cPres').textContent  = pres;
+    document.getElementById('cFalta').textContent = DADOS.length - pres;
+  }
+
+  function montarChips(){
+    var grupos = {}; DADOS.forEach(function(x){ grupos[x.grupo]=(grupos[x.grupo]||0)+1; });
+    var nomes = ['Todos'].concat(Object.keys(grupos).sort(function(a,b){return a.localeCompare(b,'pt-BR');}));
+    var el = document.getElementById('chips'); el.innerHTML='';
+    nomes.forEach(function(g){
+      var c = document.createElement('div');
+      c.className = 'chip' + (g===FILTRO_GRUPO?' on':'');
+      c.textContent = g==='Todos' ? ('Todos ('+DADOS.length+')') : (g+' ('+grupos[g]+')');
+      c.onclick = function(){ FILTRO_GRUPO=g; montarChips(); render(); };
+      el.appendChild(c);
+    });
+  }
+
+  function render(){
+    var termo = BUSCA.trim().toLowerCase();
+    var vis = DADOS.filter(function(x){
+      if (FILTRO_GRUPO!=='Todos' && x.grupo!==FILTRO_GRUPO) return false;
+      if (!termo) return true;
+      return (x.nome+' '+x.email+' '+x.whatsapp).toLowerCase().indexOf(termo) !== -1;
+    });
+    var lista = document.getElementById('lista'); lista.innerHTML='';
+    document.getElementById('vazio').classList.toggle('hidden', vis.length>0);
+    vis.forEach(function(x){
+      var zap = (x.whatsapp||'').replace(/\D/g,'');
+      var it = document.createElement('div');
+      it.className = 'item' + (x.presente?' pres':'');
+      it.innerHTML =
+        '<div class="info">'+
+          '<div class="nome">'+esc(x.nome)+'</div>'+
+          '<div class="meta"><span class="grp">'+esc(x.grupo)+'</span>'+
+            (zap? '<a href="https://wa.me/55'+zap+'" target="_blank">📱 '+esc(x.whatsapp)+'</a>':'')+
+            (x.email? '<span>✉️ '+esc(x.email)+'</span>':'')+
+          '</div>'+
+        '</div>';
+      var b = document.createElement('button');
+      b.className = 'toggle' + (x.presente?' on':'');
+      b.textContent = x.presente ? '✓ Presente' : 'Marcar';
+      b.onclick = function(){
+        x.presente = !x.presente;
+        marcarPresenca(x.email, x.presente);
+        contadores(); render();
+      };
+      it.appendChild(b);
+      lista.appendChild(it);
+    });
+  }
+
+  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  function abrirLista(){
+    document.getElementById('sub').textContent = 'Carregando…';
+    carregar(CHAVE).then(function(r){
+      if(!r || r.ok===false){
+        // senha errada -> volta pra tela de senha
+        localStorage.removeItem('mc_chave');
+        document.getElementById('app').classList.add('hidden');
+        document.getElementById('gate').classList.remove('hidden');
+        document.getElementById('gateErro').textContent = 'Senha incorreta. Tente de novo.';
+        return;
+      }
+      DADOS = r.inscricoes || [];
+      document.getElementById('gate').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      document.getElementById('sub').textContent = 'Atualizado às ' + (r.atualizadoEm||'agora');
+      document.getElementById('foot').textContent = 'Toque em "Marcar" quando a pessoa chegar. As marcações ficam salvas na planilha.';
+      contadores(); montarChips(); render();
+    }).catch(function(){
+      document.getElementById('sub').textContent = 'Erro ao carregar. Toque em ↻ Atualizar.';
+    });
+  }
+
+  // ---- eventos ----
+  document.getElementById('entrar').onclick = function(){
+    var s = document.getElementById('senha').value.trim();
+    if(!s){ document.getElementById('gateErro').textContent='Digite a senha.'; return; }
+    CHAVE = s; localStorage.setItem('mc_chave', s);
+    document.getElementById('gateErro').textContent='';
+    abrirLista();
+  };
+  document.getElementById('senha').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('entrar').click(); });
+  document.getElementById('busca').addEventListener('input', function(e){ BUSCA=e.target.value; render(); });
+  document.getElementById('recarregar').onclick = abrirLista;
+
+  // se ja tem senha salva, entra direto
+  if(CHAVE){ document.getElementById('gate').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); abrirLista(); }
+</script>
+</body>
+</html>

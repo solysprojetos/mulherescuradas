@@ -11,6 +11,8 @@ var NOME_EVENTO    = 'Mulheres Curadas';
 var REMETENTE      = 'Mulheres Curadas';           // nome que aparece como remetente
 var NOME_ABA       = 'Inscrições';                  // aba onde as inscrições são salvas
 var NOME_CONFERENCIA = 'Conferência';               // aba com a lista para conferir (check-in)
+var NOME_PRESENCA  = 'Presença';                    // aba que guarda o check-in feito pelo site
+var CHAVE_LISTA    = 'curadas2026';                 // senha para abrir a lista no site (TROQUE!)
 var EMAIL_AVISO    = 'solysprojetos@gmail.com';     // quem recebe o aviso de nova inscrição
 var DATA_EVENTO    = '1º DE AGOSTO DE 2026 (SÁBADO), ÀS 18H';
 var LOCAL_EVENTO   = 'CC VISÃO PROFÉTICA, AV. DOS MARINHEIROS, 319, CIDADE NOVA, MARACANAÚ, CE';
@@ -21,6 +23,13 @@ function doPost(e) {
   try {
     lock.waitLock(20000);
     var dados = JSON.parse(e.postData.contents);
+
+    // check-in de presença vindo da página do site
+    if (dados.acao === 'presenca') {
+      if (dados.chave !== CHAVE_LISTA) return resposta({ ok: false, erro: 'nao_autorizado' });
+      marcarPresenca_(dados.email, dados.presente === true || dados.presente === 'true');
+      return resposta({ ok: true });
+    }
 
     var ss  = SpreadsheetApp.getActiveSpreadsheet();
     var aba = ss.getSheetByName(NOME_ABA) || ss.getSheets()[0];
@@ -104,8 +113,94 @@ function resposta(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-function doGet() {
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  if (p.lista === '1') {
+    var saida = (p.chave === CHAVE_LISTA) ? dadosDaLista() : { ok: false, erro: 'nao_autorizado' };
+    var json = JSON.stringify(saida);
+    if (p.callback) {
+      return ContentService.createTextOutput(p.callback + '(' + json + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT); // JSONP (funciona no site sem CORS)
+    }
+    return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+  }
   return ContentService.createTextOutput('OK - servico de inscricoes ativo.');
+}
+
+// monta a lista organizada (para a pagina do site)
+function dadosDaLista() {
+  var ss     = SpreadsheetApp.getActiveSpreadsheet();
+  var origem = ss.getSheetByName(NOME_ABA) || ss.getSheets()[0];
+  var ult    = origem.getLastRow();
+  var presenca = lerPresenca_();
+  var testes = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var lista = [], grupos = {}, vistos = {};
+  if (ult >= 2) {
+    var dados = origem.getRange(2, 1, ult - 1, 5).getValues();
+    for (var i = 0; i < dados.length; i++) {
+      var nome  = padronizarNome(dados[i][1]);
+      var email = padronizarEmail(dados[i][3]);
+      if (!nome && !email) continue;
+      if (testes.indexOf(nome.toLowerCase()) !== -1) continue;
+      if (vistos[nome]) continue; // tira nomes repetidos
+      vistos[nome] = true;
+      var grupo = padronizarGrupo(dados[i][4]);
+      var d = dados[i][0];
+      var dataStr = (d instanceof Date)
+        ? Utilities.formatDate(d, Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm')
+        : String(d || '');
+      lista.push({
+        nome: nome, grupo: grupo,
+        whatsapp: padronizarWhatsapp(dados[i][2]),
+        email: email, data: dataStr,
+        presente: presenca[email] === true
+      });
+      grupos[grupo] = (grupos[grupo] || 0) + 1;
+    }
+    lista.sort(function (a, b) {
+      var s = String(a.grupo).localeCompare(String(b.grupo), 'pt-BR');
+      if (s !== 0) return s;
+      return String(a.nome).localeCompare(String(b.nome), 'pt-BR');
+    });
+  }
+  return {
+    ok: true,
+    atualizadoEm: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm'),
+    total: lista.length, grupos: grupos, inscricoes: lista
+  };
+}
+
+// lê o mapa de presenças já marcadas (e-mail -> true)
+function lerPresenca_() {
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getSheetByName(NOME_PRESENCA);
+  var mapa = {};
+  if (aba && aba.getLastRow() >= 2) {
+    var v = aba.getRange(2, 1, aba.getLastRow() - 1, 2).getValues();
+    for (var i = 0; i < v.length; i++) {
+      var em = String(v[i][0] || '').toLowerCase().trim();
+      if (em) mapa[em] = (v[i][1] === true);
+    }
+  }
+  return mapa;
+}
+
+// marca/desmarca presença de um e-mail (guarda na aba Presença)
+function marcarPresenca_(email, presente) {
+  email = String(email || '').toLowerCase().trim();
+  if (!email) return;
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getSheetByName(NOME_PRESENCA);
+  if (!aba) { aba = ss.insertSheet(NOME_PRESENCA); aba.appendRow(['E-mail', 'Presente', 'Quando']); }
+  var last = aba.getLastRow();
+  var col = last >= 2 ? aba.getRange(2, 1, last - 1, 1).getValues() : [];
+  for (var i = 0; i < col.length; i++) {
+    if (String(col[i][0] || '').toLowerCase().trim() === email) {
+      aba.getRange(i + 2, 2, 1, 2).setValues([[presente, new Date()]]);
+      return;
+    }
+  }
+  aba.appendRow([email, presente, new Date()]);
 }
 
 // ===== PADRONIZADORES (deixam cada campo no padrão) =====
