@@ -22,12 +22,11 @@
   .wrap{width:100%;max-width:760px;margin:0 auto}
   .grad{background:linear-gradient(90deg,var(--pink) 0%,var(--pink-2) 45%,var(--nude) 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent}
-  header{text-align:center;margin-bottom:18px}
-  header img{max-width:230px;width:60%;height:auto;margin-bottom:6px}
-  header h1{font-size:22px;font-weight:800;letter-spacing:-.5px}
+  header{text-align:center;margin-bottom:16px}
+  header img{max-width:220px;width:58%;height:auto;margin-bottom:6px}
+  header h1{font-size:21px;font-weight:800;letter-spacing:-.5px}
   header .sub{color:var(--muted);font-size:13px;margin-top:2px}
 
-  /* cartoes de contagem */
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
   .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center}
   .card .n{font-size:26px;font-weight:800;line-height:1}
@@ -35,12 +34,12 @@
   .card.presentes .n{color:var(--ok)}
 
   .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-  input.busca{flex:1;min-width:180px;background:var(--input);border:1px solid var(--border);
+  input.busca{flex:1;min-width:170px;background:var(--input);border:1px solid var(--border);
     color:var(--text);border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px}
   input.busca::placeholder{color:var(--muted)}
   button.btn{background:linear-gradient(90deg,var(--pink),var(--pink-2));border:0;color:#241713;
     font-weight:700;font-family:inherit;border-radius:12px;padding:12px 16px;font-size:14px;cursor:pointer}
-  button.ghost{background:var(--card);border:1px solid var(--border);color:var(--text)}
+  button.ghost{background:var(--card);border:1px solid var(--border);color:var(--muted)}
 
   .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
   .chip{background:var(--card);border:1px solid var(--border);color:var(--muted);
@@ -49,29 +48,27 @@
 
   .lista{display:flex;flex-direction:column;gap:9px}
   .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);
-    border-radius:14px;padding:12px 14px}
+    border-radius:14px;padding:13px 14px}
   .item.pres{background:var(--ok-bg);border-color:rgba(111,207,151,.4)}
   .item .info{flex:1;min-width:0}
   .item .nome{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .item .meta{color:var(--muted);font-size:12px;margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .item .grp{background:var(--card-2);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:11px}
-  .item .meta a{color:var(--pink-2);text-decoration:none}
-  /* botao presente */
+  .item .grp{display:inline-block;margin-top:4px;background:var(--card-2);border:1px solid var(--border);
+    border-radius:6px;padding:1px 7px;font-size:11px;color:var(--muted)}
   .toggle{flex-shrink:0;border:1px solid var(--border);background:var(--card-2);color:var(--muted);
-    border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+    border-radius:999px;padding:10px 15px;font-size:13px;font-weight:700;cursor:pointer}
   .toggle.on{background:var(--ok);color:#12331f;border-color:transparent}
 
-  .msg{text-align:center;color:var(--muted);padding:30px 10px;font-size:14px}
-  .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
+  .msg{text-align:center;color:var(--muted);padding:26px 10px;font-size:14px}
+  .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:18px;line-height:1.6}
+  .foot a{color:var(--pink-2);cursor:pointer}
 
-  /* tela de senha */
   .gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;z-index:10}
   .gate .box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px 24px;max-width:360px;width:100%;text-align:center}
   .gate h2{font-size:20px;font-weight:800;margin-bottom:6px}
   .gate p{color:var(--muted);font-size:13px;margin-bottom:16px}
   .gate input{width:100%;background:var(--input);border:1px solid var(--border);color:var(--text);
     border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px;margin-bottom:10px;text-align:center}
-  .gate .erro{color:#e88;font-size:13px;min-height:18px;margin-bottom:6px}
+  .gate .erro{color:#e88;font-size:13px;min-height:18px;margin-bottom:4px}
   .hidden{display:none!important}
 </style>
 </head>
@@ -80,7 +77,7 @@
   <div class="gate" id="gate">
     <div class="box">
       <h2 class="grad">🌸 Conferência</h2>
-      <p>Área da organização. Digite a senha para ver a lista de inscritas.</p>
+      <p>Área da organização. Digite a senha para abrir a lista de presença.</p>
       <div class="erro" id="gateErro"></div>
       <input type="password" id="senha" placeholder="Senha" autocomplete="off">
       <button class="btn" id="entrar" style="width:100%">Entrar</button>
@@ -91,8 +88,8 @@
   <div class="wrap hidden" id="app">
     <header>
       <img src="wordmark-mulheres-curadas.png" alt="Mulheres Curadas">
-      <h1 class="grad">Lista de conferência</h1>
-      <div class="sub" id="sub">Carregando…</div>
+      <h1 class="grad">Lista de presença</h1>
+      <div class="sub">1º de agosto de 2026 • toque para marcar quem chegou</div>
     </header>
 
     <div class="cards">
@@ -102,136 +99,90 @@
     </div>
 
     <div class="toolbar">
-      <input class="busca" id="busca" placeholder="🔎 Buscar por nome, e-mail ou WhatsApp…">
-      <button class="btn ghost" id="recarregar">↻ Atualizar</button>
+      <input class="busca" id="busca" placeholder="🔎 Buscar por nome…">
     </div>
     <div class="chips" id="chips"></div>
 
     <div class="lista" id="lista"></div>
-    <div class="msg hidden" id="vazio">Nenhuma inscrita encontrada.</div>
-    <div class="foot" id="foot"></div>
+    <div class="msg hidden" id="vazio">Ninguém encontrado com esse nome.</div>
+    <div class="foot">
+      As marcações ficam salvas <b>neste aparelho</b>. Use sempre o mesmo celular para conferir.<br>
+      <a id="limpar">↺ Limpar todas as marcações</a>
+    </div>
   </div>
 
 <script>
-  // URL do seu Apps Script (a mesma do formulario de inscricao)
-  var URL_API = "https://script.google.com/macros/s/AKfycbwa2jGLDt2H690COhdR-tuwE6iXVcu6eTug3nGeHMNS7JD3FiXWc-SCkxviSReRKWU4_g/exec";
+  // ===== LISTA DE INSCRITAS (nome + setor) — atualizada em 31/07 =====
+  var DATA = [{"n":"ADRIELLE RODRIGUES FIDELES PINHEIRO","g":"CONVIDADAS"},{"n":"ALEXANDRA CAVALCANTE","g":"CONVIDADAS"},{"n":"AMANDA HULY","g":"CONVIDADAS"},{"n":"ANA PAULA","g":"CONVIDADAS"},{"n":"ANDREA DA SILVA FREITAS","g":"CONVIDADAS"},{"n":"ANTONIA RAQUEL","g":"CONVIDADAS"},{"n":"BIANCA DE CASTRO ROCHA","g":"CONVIDADAS"},{"n":"BRUNA KAREN","g":"CONVIDADAS"},{"n":"BRUNA LIMA","g":"CONVIDADAS"},{"n":"CAMILA DE ARAÚJO RIBEIRO","g":"CONVIDADAS"},{"n":"CLEIDELENE NOGUEIRA NUNES","g":"CONVIDADAS"},{"n":"CRISTIANA ARAUJO DA COSTA MONTEIRO","g":"CONVIDADAS"},{"n":"CRISTIANE CRUZ","g":"CONVIDADAS"},{"n":"CRISTINA VALERIO","g":"CONVIDADAS"},{"n":"DARLYANE DA SILVA OLIVEIRA","g":"CONVIDADAS"},{"n":"ELAINE","g":"CONVIDADAS"},{"n":"ELISANGELA SILVA ARAÚJO","g":"CONVIDADAS"},{"n":"ELVIRENE VALÉRIO","g":"CONVIDADAS"},{"n":"ELZIMAR CUNHA DA SILVA","g":"CONVIDADAS"},{"n":"EMILE MARINHO","g":"CONVIDADAS"},{"n":"EVILA SOUSA","g":"CONVIDADAS"},{"n":"HELLEN ALENCAR","g":"CONVIDADAS"},{"n":"HERMANUELE MOTA ANDRADE LOBÃO","g":"CONVIDADAS"},{"n":"IASMIM CALIXTO","g":"CONVIDADAS"},{"n":"IVONETE MARINHO","g":"CONVIDADAS"},{"n":"JESSIKA SZABO","g":"CONVIDADAS"},{"n":"JOSIELE MHENDES DIAS LIMA","g":"CONVIDADAS"},{"n":"KAROLINE RODRIGUES","g":"CONVIDADAS"},{"n":"LARISSA VASCONCELOS","g":"CONVIDADAS"},{"n":"LIDIANE MONTE","g":"CONVIDADAS"},{"n":"LUANA VANESSA","g":"CONVIDADAS"},{"n":"MARIA ANETE MARINHO DA SILVA","g":"CONVIDADAS"},{"n":"MARIA DO SOCORRO PEREIRA SAMPAIO","g":"CONVIDADAS"},{"n":"MARIA SAYONARA ALVES GURGEL","g":"CONVIDADAS"},{"n":"MILENE BARROSO","g":"CONVIDADAS"},{"n":"NATASHA SARAIVA PAULA","g":"CONVIDADAS"},{"n":"NATÁLIA MOREIRA","g":"CONVIDADAS"},{"n":"PATRICIA BRAGA","g":"CONVIDADAS"},{"n":"PRISCILA NASCIMENTO COSTA PEREIRA","g":"CONVIDADAS"},{"n":"ROSE MARINHO","g":"CONVIDADAS"},{"n":"VITORIA OLIVEIRA ALBUQUERQUE","g":"CONVIDADAS"},{"n":"ALICE VITÓRIA","g":"SGROUP NACIONAL"},{"n":"AMANDA SOUSA DIAS","g":"SGROUP NACIONAL"},{"n":"ANTONIA SOLANGE SILVEIRA","g":"SGROUP NACIONAL"},{"n":"CLAUDIANA PAIVA LIMA SILVA","g":"SGROUP NACIONAL"},{"n":"ELIZABETH BERANEK","g":"SGROUP NACIONAL"},{"n":"ERIKA MARQUES LEITAO","g":"SGROUP NACIONAL"},{"n":"FERNANDA LINA LIMA","g":"SGROUP NACIONAL"},{"n":"GEISSIANE MARTINS DE SOUZA ANOS","g":"SGROUP NACIONAL"},{"n":"ISABELLE GOMES","g":"SGROUP NACIONAL"},{"n":"JULIANA DE SOUSA SILVA PAULINO","g":"SGROUP NACIONAL"},{"n":"KAILANNY DA SILVA BARBOSA","g":"SGROUP NACIONAL"},{"n":"LILIANE DA SILVA BANDEIRA","g":"SGROUP NACIONAL"},{"n":"LUANE PEREIRA DE OLIVEIRA PAIVA","g":"SGROUP NACIONAL"},{"n":"LUANNA PEREIRA DE OLIVEIRA PAIVA","g":"SGROUP NACIONAL"},{"n":"MALINDA GAIL ABREU BARROSO","g":"SGROUP NACIONAL"},{"n":"MARIANA GARCIAS MOREIRA","g":"SGROUP NACIONAL"},{"n":"MEIRE MARQUES","g":"SGROUP NACIONAL"},{"n":"MILENA VIANA","g":"SGROUP NACIONAL"},{"n":"SANDRA MOREIRA","g":"SGROUP NACIONAL"},{"n":"SARAH BRITO","g":"SGROUP NACIONAL"},{"n":"STHEFFANY ARAUJO","g":"SGROUP NACIONAL"},{"n":"THAIZ RHAIANE BEZERRA BARROS","g":"SGROUP NACIONAL"},{"n":"THAÍS ADRIANNY DA SILVA","g":"SGROUP NACIONAL"},{"n":"AGLAY CRISTHIAN DE O. TEIXEIRA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"ANDREYZA MATOS DE OLIVEIRA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"CAMILA RODRIGUES MESQUITA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"DEBORA CAVALCANTE SOBRINHO","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"DEBORAH","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"ERILENE SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"FRANCISCA SAMILA DE BRITO SANTOS","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"GISIANE CUNHA DA SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"KALINA RODRIGUES CARVALHO","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"KAYLANE SANTOS DE LIMA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"LIANA HOLANDA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"MARIA EDILANE VIEIRA DA SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"SARAH CARDOSO SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"VITÓRIA RÉGIA ALVES LOPES","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"BRUNA DE JESUS OLIVEIRA","g":"VOLUNTÁRIOS"},{"n":"CRISTINA MARTINS","g":"VOLUNTÁRIOS"},{"n":"DAFINY WENDY GOMES LIMA","g":"VOLUNTÁRIOS"},{"n":"JOÃO DAVI DE SOUZA NASCIMENTO","g":"VOLUNTÁRIOS"},{"n":"LEONARA RODRIGUES","g":"VOLUNTÁRIOS"},{"n":"LUIZ DANILO AZEVEDO","g":"VOLUNTÁRIOS"},{"n":"MANOEL EUFRASIO GALVÃO DO NASCIMENTO","g":"VOLUNTÁRIOS"},{"n":"MARIA DE FÁTIMA DA COSTA ANDRADE","g":"VOLUNTÁRIOS"},{"n":"NATHIELY MORAIS","g":"VOLUNTÁRIOS"},{"n":"NICLAILTON DA COSTA ANDRADE","g":"VOLUNTÁRIOS"},{"n":"OTNIEL DE OLIVEIRA SOARES","g":"VOLUNTÁRIOS"},{"n":"OZIEL DE OLIVEIRA SOARES","g":"VOLUNTÁRIOS"},{"n":"PABLO PATRICK MENDES DA SILVA","g":"VOLUNTÁRIOS"},{"n":"PAMELA DANTAS","g":"VOLUNTÁRIOS"},{"n":"RAFAELA MENDES","g":"VOLUNTÁRIOS"}];
 
-  var CHAVE = localStorage.getItem('mc_chave') || '';
-  var DADOS = [], FILTRO_GRUPO = 'Todos', BUSCA = '';
+  var SENHA = 'curadas2026';
+  var KEY = 'mc_presenca_v1';
+  var pres = JSON.parse(localStorage.getItem(KEY) || '{}');
+  var FILTRO = 'Todos', BUSCA = '';
 
-  // ---- JSONP (busca a lista sem problema de CORS) ----
-  function carregar(chave){
-    return new Promise(function(resolve,reject){
-      var cb = 'mc_cb_' + Math.floor(Math.random()*1e9);
-      var s = document.createElement('script');
-      var to = setTimeout(function(){ limpar(); reject(new Error('timeout')); }, 15000);
-      function limpar(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(to); }
-      window[cb] = function(d){ limpar(); resolve(d); };
-      s.onerror = function(){ limpar(); reject(new Error('rede')); };
-      s.src = URL_API + '?lista=1&chave=' + encodeURIComponent(chave) + '&callback=' + cb + '&_=' + Date.now();
-      document.body.appendChild(s);
-    });
-  }
+  function salvar(){ localStorage.setItem(KEY, JSON.stringify(pres)); }
+  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
-  function marcarPresenca(email, presente){
-    // envio "fire and forget" (nao precisa esperar resposta)
-    fetch(URL_API, { method:'POST', mode:'no-cors',
-      body: JSON.stringify({ acao:'presenca', chave:CHAVE, email:email, presente:presente }) });
-  }
-
-  // ---- render ----
   function contadores(){
-    var pres = DADOS.filter(function(x){return x.presente;}).length;
-    document.getElementById('cTotal').textContent = DADOS.length;
-    document.getElementById('cPres').textContent  = pres;
-    document.getElementById('cFalta').textContent = DADOS.length - pres;
+    var p = DATA.filter(function(x){return pres[x.n];}).length;
+    document.getElementById('cTotal').textContent = DATA.length;
+    document.getElementById('cPres').textContent  = p;
+    document.getElementById('cFalta').textContent = DATA.length - p;
   }
-
-  function montarChips(){
-    var grupos = {}; DADOS.forEach(function(x){ grupos[x.grupo]=(grupos[x.grupo]||0)+1; });
-    var nomes = ['Todos'].concat(Object.keys(grupos).sort(function(a,b){return a.localeCompare(b,'pt-BR');}));
+  function chips(){
+    var g = {}; DATA.forEach(function(x){ g[x.g]=(g[x.g]||0)+1; });
+    var nomes = ['Todos'].concat(Object.keys(g).sort(function(a,b){return a.localeCompare(b,'pt-BR');}));
     var el = document.getElementById('chips'); el.innerHTML='';
-    nomes.forEach(function(g){
+    nomes.forEach(function(nome){
       var c = document.createElement('div');
-      c.className = 'chip' + (g===FILTRO_GRUPO?' on':'');
-      c.textContent = g==='Todos' ? ('Todos ('+DADOS.length+')') : (g+' ('+grupos[g]+')');
-      c.onclick = function(){ FILTRO_GRUPO=g; montarChips(); render(); };
+      c.className = 'chip'+(nome===FILTRO?' on':'');
+      c.textContent = nome==='Todos' ? ('Todos ('+DATA.length+')') : (nome+' ('+g[nome]+')');
+      c.onclick = function(){ FILTRO=nome; chips(); render(); };
       el.appendChild(c);
     });
   }
-
   function render(){
-    var termo = BUSCA.trim().toLowerCase();
-    var vis = DADOS.filter(function(x){
-      if (FILTRO_GRUPO!=='Todos' && x.grupo!==FILTRO_GRUPO) return false;
-      if (!termo) return true;
-      return (x.nome+' '+x.email+' '+x.whatsapp).toLowerCase().indexOf(termo) !== -1;
+    var t = BUSCA.trim().toLowerCase();
+    var vis = DATA.filter(function(x){
+      if (FILTRO!=='Todos' && x.g!==FILTRO) return false;
+      if (!t) return true;
+      return x.n.toLowerCase().indexOf(t) !== -1;
     });
     var lista = document.getElementById('lista'); lista.innerHTML='';
     document.getElementById('vazio').classList.toggle('hidden', vis.length>0);
     vis.forEach(function(x){
-      var zap = (x.whatsapp||'').replace(/\D/g,'');
+      var on = !!pres[x.n];
       var it = document.createElement('div');
-      it.className = 'item' + (x.presente?' pres':'');
-      it.innerHTML =
-        '<div class="info">'+
-          '<div class="nome">'+esc(x.nome)+'</div>'+
-          '<div class="meta"><span class="grp">'+esc(x.grupo)+'</span>'+
-            (zap? '<a href="https://wa.me/55'+zap+'" target="_blank">📱 '+esc(x.whatsapp)+'</a>':'')+
-            (x.email? '<span>✉️ '+esc(x.email)+'</span>':'')+
-          '</div>'+
-        '</div>';
+      it.className = 'item'+(on?' pres':'');
+      it.innerHTML = '<div class="info"><div class="nome">'+esc(x.n)+'</div><span class="grp">'+esc(x.g)+'</span></div>';
       var b = document.createElement('button');
-      b.className = 'toggle' + (x.presente?' on':'');
-      b.textContent = x.presente ? '✓ Presente' : 'Marcar';
+      b.className = 'toggle'+(on?' on':'');
+      b.textContent = on ? '✓ Presente' : 'Marcar';
       b.onclick = function(){
-        x.presente = !x.presente;
-        marcarPresenca(x.email, x.presente);
-        contadores(); render();
+        if (pres[x.n]) delete pres[x.n]; else pres[x.n]=true;
+        salvar(); contadores(); render();
       };
       it.appendChild(b);
       lista.appendChild(it);
     });
   }
-
-  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-
-  function abrirLista(){
-    document.getElementById('sub').textContent = 'Carregando…';
-    carregar(CHAVE).then(function(r){
-      if(!r || r.ok===false){
-        // senha errada -> volta pra tela de senha
-        localStorage.removeItem('mc_chave');
-        document.getElementById('app').classList.add('hidden');
-        document.getElementById('gate').classList.remove('hidden');
-        document.getElementById('gateErro').textContent = 'Senha incorreta. Tente de novo.';
-        return;
-      }
-      DADOS = r.inscricoes || [];
-      document.getElementById('gate').classList.add('hidden');
-      document.getElementById('app').classList.remove('hidden');
-      document.getElementById('sub').textContent = 'Atualizado às ' + (r.atualizadoEm||'agora');
-      document.getElementById('foot').textContent = 'Toque em "Marcar" quando a pessoa chegar. As marcações ficam salvas na planilha.';
-      contadores(); montarChips(); render();
-    }).catch(function(){
-      document.getElementById('sub').textContent = 'Erro ao carregar. Toque em ↻ Atualizar.';
-    });
+  function abrir(){
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    contadores(); chips(); render();
   }
 
-  // ---- eventos ----
   document.getElementById('entrar').onclick = function(){
     var s = document.getElementById('senha').value.trim();
-    if(!s){ document.getElementById('gateErro').textContent='Digite a senha.'; return; }
-    CHAVE = s; localStorage.setItem('mc_chave', s);
-    document.getElementById('gateErro').textContent='';
-    abrirLista();
+    if (s.toLowerCase() !== SENHA){ document.getElementById('gateErro').textContent='Senha incorreta.'; return; }
+    localStorage.setItem('mc_ok','1'); abrir();
   };
   document.getElementById('senha').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('entrar').click(); });
   document.getElementById('busca').addEventListener('input', function(e){ BUSCA=e.target.value; render(); });
-  document.getElementById('recarregar').onclick = abrirLista;
-
-  // se ja tem senha salva, entra direto
-  if(CHAVE){ document.getElementById('gate').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); abrirLista(); }
+  document.getElementById('limpar').onclick = function(){
+    if (confirm('Desmarcar TODAS as presenças? Isso não pode ser desfeito.')){ pres={}; salvar(); contadores(); render(); }
+  };
+  if (localStorage.getItem('mc_ok')==='1') abrir();
 </script>
 </body>
 </html>
