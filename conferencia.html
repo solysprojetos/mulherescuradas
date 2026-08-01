@@ -100,7 +100,9 @@
 
     <div class="toolbar">
       <input class="busca" id="busca" placeholder="🔎 Buscar por nome…">
+      <button class="btn ghost" id="recarregar">🔄 Atualizar</button>
     </div>
+    <div id="modo" style="text-align:center;font-size:12px;color:var(--muted);margin:-4px 0 12px"></div>
     <div class="chips" id="chips"></div>
 
     <div class="lista" id="lista"></div>
@@ -115,35 +117,69 @@
   // ===== LISTA DE INSCRITAS (nome + setor) — atualizada em 01/08 =====
   var DATA = [{"n":"ADRIELLE RODRIGUES FIDELES PINHEIRO","g":"CONVIDADAS"},{"n":"ALEXANDRA CAVALCANTE","g":"CONVIDADAS"},{"n":"AMANDA HULY","g":"CONVIDADAS"},{"n":"ANA PAULA","g":"CONVIDADAS"},{"n":"ANDREA DA SILVA FREITAS","g":"CONVIDADAS"},{"n":"ANTONIA RAQUEL","g":"CONVIDADAS"},{"n":"BIANCA DE CASTRO ROCHA","g":"CONVIDADAS"},{"n":"BRUNA KAREN","g":"CONVIDADAS"},{"n":"BRUNA LIMA","g":"CONVIDADAS"},{"n":"CAMILA DE ARAÚJO RIBEIRO","g":"CONVIDADAS"},{"n":"CLEIDELENE NOGUEIRA NUNES","g":"CONVIDADAS"},{"n":"CRISTIANA ARAUJO DA COSTA MONTEIRO","g":"CONVIDADAS"},{"n":"CRISTIANE CRUZ","g":"CONVIDADAS"},{"n":"CRISTINA VALERIO","g":"CONVIDADAS"},{"n":"DARLYANE DA SILVA OLIVEIRA","g":"CONVIDADAS"},{"n":"ELAINE","g":"CONVIDADAS"},{"n":"ELISANGELA SILVA ARAÚJO","g":"CONVIDADAS"},{"n":"ELVIRENE VALÉRIO","g":"CONVIDADAS"},{"n":"ELZIMAR CUNHA DA SILVA","g":"CONVIDADAS"},{"n":"EMILE MARINHO","g":"CONVIDADAS"},{"n":"EVILA SOUSA","g":"CONVIDADAS"},{"n":"HELLEN ALENCAR","g":"CONVIDADAS"},{"n":"HERMANUELE MOTA ANDRADE LOBÃO","g":"CONVIDADAS"},{"n":"IASMIM CALIXTO","g":"CONVIDADAS"},{"n":"IVONETE MARINHO","g":"CONVIDADAS"},{"n":"JESSIKA SZABO","g":"CONVIDADAS"},{"n":"JOSIELE MHENDES DIAS LIMA","g":"CONVIDADAS"},{"n":"JULIANE MARIA SOUSA DE OLIVEIRA","g":"CONVIDADAS"},{"n":"KAROLINE RODRIGUES","g":"CONVIDADAS"},{"n":"LARISSA VASCONCELOS","g":"CONVIDADAS"},{"n":"LIDIANE MONTE","g":"CONVIDADAS"},{"n":"LUANA VANESSA","g":"CONVIDADAS"},{"n":"MARIA ANETE MARINHO DA SILVA","g":"CONVIDADAS"},{"n":"MARIA DO SOCORRO PEREIRA SAMPAIO","g":"CONVIDADAS"},{"n":"MARIA MARLIANE SILVA CHAVES","g":"CONVIDADAS"},{"n":"MARIA SAYONARA ALVES GURGEL","g":"CONVIDADAS"},{"n":"MILENE BARROSO","g":"CONVIDADAS"},{"n":"NATASHA SARAIVA PAULA","g":"CONVIDADAS"},{"n":"NATÁLIA MOREIRA","g":"CONVIDADAS"},{"n":"PATRICIA BRAGA","g":"CONVIDADAS"},{"n":"PRISCILA NASCIMENTO COSTA PEREIRA","g":"CONVIDADAS"},{"n":"ROSE MARINHO","g":"CONVIDADAS"},{"n":"VITORIA OLIVEIRA ALBUQUERQUE","g":"CONVIDADAS"},{"n":"ALICE VITÓRIA","g":"SGROUP NACIONAL"},{"n":"AMANDA SOUSA DIAS","g":"SGROUP NACIONAL"},{"n":"ANTONIA SOLANGE SILVEIRA","g":"SGROUP NACIONAL"},{"n":"CAMILA ROBERTA CORREIA DE AQUINO LELES","g":"SGROUP NACIONAL"},{"n":"CLAUDIANA PAIVA LIMA SILVA","g":"SGROUP NACIONAL"},{"n":"ELIZABETH BERANEK","g":"SGROUP NACIONAL"},{"n":"ERIKA MARQUES LEITAO","g":"SGROUP NACIONAL"},{"n":"FERNANDA LINA LIMA","g":"SGROUP NACIONAL"},{"n":"GEISSIANE MARTINS DE SOUZA ANOS","g":"SGROUP NACIONAL"},{"n":"ISABELLE GOMES","g":"SGROUP NACIONAL"},{"n":"JULIANA DE SOUSA SILVA PAULINO","g":"SGROUP NACIONAL"},{"n":"KAILANNY DA SILVA BARBOSA","g":"SGROUP NACIONAL"},{"n":"KELVIA SOARES DE JESUS","g":"SGROUP NACIONAL"},{"n":"LILIANE DA SILVA BANDEIRA","g":"SGROUP NACIONAL"},{"n":"LUANE PEREIRA DE OLIVEIRA PAIVA","g":"SGROUP NACIONAL"},{"n":"LUANNA PEREIRA DE OLIVEIRA PAIVA","g":"SGROUP NACIONAL"},{"n":"MALINDA GAIL ABREU BARROSO","g":"SGROUP NACIONAL"},{"n":"MARIANA GARCIAS MOREIRA","g":"SGROUP NACIONAL"},{"n":"MEIRE MARQUES","g":"SGROUP NACIONAL"},{"n":"MILENA VIANA","g":"SGROUP NACIONAL"},{"n":"NAYARA ALVES VASCONCELOS","g":"SGROUP NACIONAL"},{"n":"SANDRA MOREIRA","g":"SGROUP NACIONAL"},{"n":"SARAH BRITO","g":"SGROUP NACIONAL"},{"n":"STHEFFANY ARAUJO","g":"SGROUP NACIONAL"},{"n":"THAIZ RHAIANE BEZERRA BARROS","g":"SGROUP NACIONAL"},{"n":"THAÍS ADRIANNY DA SILVA","g":"SGROUP NACIONAL"},{"n":"AGLAY CRISTHIAN DE O. TEIXEIRA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"ANDREYZA MATOS DE OLIVEIRA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"CAMILA RODRIGUES MESQUITA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"DEBORA CAVALCANTE SOBRINHO","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"DEBORAH","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"ERILENE SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"ERISHELDA DE SOUSA DAMASCENO CAVALCANTE","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"FRANCISCA SAMILA DE BRITO SANTOS","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"GISIANE CUNHA DA SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"KALINA RODRIGUES CARVALHO","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"KAYLANE SANTOS DE LIMA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"LIANA HOLANDA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"MARIA EDILANE VIEIRA DA SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"NAYELLY ALVES DA SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"SARAH CARDOSO SILVA","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"VITÓRIA RÉGIA ALVES LOPES","g":"SOLYS GESTÃO ADMINISTRATIVA"},{"n":"BRUNA DE JESUS OLIVEIRA","g":"VOLUNTÁRIOS"},{"n":"CRISTINA MARTINS","g":"VOLUNTÁRIOS"},{"n":"DAFINY WENDY GOMES LIMA","g":"VOLUNTÁRIOS"},{"n":"JOÃO DAVI DE SOUZA NASCIMENTO","g":"VOLUNTÁRIOS"},{"n":"LEONARA RODRIGUES","g":"VOLUNTÁRIOS"},{"n":"LUIZ DANILO AZEVEDO","g":"VOLUNTÁRIOS"},{"n":"MANOEL EUFRASIO GALVÃO DO NASCIMENTO","g":"VOLUNTÁRIOS"},{"n":"MARIA DE FÁTIMA DA COSTA ANDRADE","g":"VOLUNTÁRIOS"},{"n":"NATHIELY MORAIS","g":"VOLUNTÁRIOS"},{"n":"NICLAILTON DA COSTA ANDRADE","g":"VOLUNTÁRIOS"},{"n":"OTNIEL DE OLIVEIRA SOARES","g":"VOLUNTÁRIOS"},{"n":"OZIEL DE OLIVEIRA SOARES","g":"VOLUNTÁRIOS"},{"n":"PABLO PATRICK MENDES DA SILVA","g":"VOLUNTÁRIOS"},{"n":"PAMELA DANTAS","g":"VOLUNTÁRIOS"},{"n":"RAFAELA MENDES","g":"VOLUNTÁRIOS"}];
 
-  var SENHA = 'curadas2026';
+  // Endereco do Apps Script (o mesmo do formulario). Se estiver "ligado"
+  // (reimplantado), a pagina sincroniza entre celulares. Se nao, funciona
+  // so neste aparelho.
+  var URL_API = "https://script.google.com/macros/s/AKfycbwa2jGLDt2H690COhdR-tuwE6iXVcu6eTug3nGeHMNS7JD3FiXWc-SCkxviSReRKWU4_g/exec";
+  var SENHA_LOCAL = 'curadas2026';
   var KEY = 'mc_presenca_v1';
-  var pres = JSON.parse(localStorage.getItem(KEY) || '{}');
-  var FILTRO = 'Todos', BUSCA = '';
+  var presLocal = JSON.parse(localStorage.getItem(KEY) || '{}');
 
-  function salvar(){ localStorage.setItem(KEY, JSON.stringify(pres)); }
+  var ITENS = [], MODO = 'local', CHAVE = '', FILTRO = 'Todos', BUSCA = '', ultimoEnvio = 0, timer = null;
+
+  function salvarLocal(){ localStorage.setItem(KEY, JSON.stringify(presLocal)); }
   function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
+  // ---- JSONP: busca a lista do servidor sem problema de CORS ----
+  function buscarServidor(chave){
+    return new Promise(function(resolve,reject){
+      var cb = 'mc_cb_' + Math.floor(Math.random()*1e9);
+      var s = document.createElement('script');
+      var to = setTimeout(function(){ limpar(); reject(new Error('timeout')); }, 7000);
+      function limpar(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(to); }
+      window[cb] = function(d){ limpar(); resolve(d); };
+      s.onerror = function(){ limpar(); reject(new Error('rede')); };
+      s.src = URL_API + '?lista=1&chave=' + encodeURIComponent(chave) + '&callback=' + cb + '&_=' + Date.now();
+      document.body.appendChild(s);
+    });
+  }
+  function enviarPresenca(email, presente){
+    if(!email) return;
+    ultimoEnvio = Date.now();
+    fetch(URL_API, { method:'POST', mode:'no-cors',
+      body: JSON.stringify({ acao:'presenca', chave:CHAVE, email:email, presente:presente }) });
+  }
+
+  function construirLocal(){
+    ITENS = DATA.map(function(x){ return { n:x.n, g:x.g, email:'', presente: !!presLocal[x.n] }; });
+  }
+  function construirOnline(r){
+    ITENS = (r.inscricoes||[]).map(function(x){
+      return { n:x.nome, g:x.grupo, email:x.email, presente: x.presente===true };
+    });
+  }
+
   function contadores(){
-    var p = DATA.filter(function(x){return pres[x.n];}).length;
-    document.getElementById('cTotal').textContent = DATA.length;
+    var p = ITENS.filter(function(x){return x.presente;}).length;
+    document.getElementById('cTotal').textContent = ITENS.length;
     document.getElementById('cPres').textContent  = p;
-    document.getElementById('cFalta').textContent = DATA.length - p;
+    document.getElementById('cFalta').textContent = ITENS.length - p;
   }
   function chips(){
-    var g = {}; DATA.forEach(function(x){ g[x.g]=(g[x.g]||0)+1; });
+    var g = {}; ITENS.forEach(function(x){ g[x.g]=(g[x.g]||0)+1; });
     var nomes = ['Todos'].concat(Object.keys(g).sort(function(a,b){return a.localeCompare(b,'pt-BR');}));
     var el = document.getElementById('chips'); el.innerHTML='';
     nomes.forEach(function(nome){
       var c = document.createElement('div');
       c.className = 'chip'+(nome===FILTRO?' on':'');
-      c.textContent = nome==='Todos' ? ('Todos ('+DATA.length+')') : (nome+' ('+g[nome]+')');
+      c.textContent = nome==='Todos' ? ('Todos ('+ITENS.length+')') : (nome+' ('+g[nome]+')');
       c.onclick = function(){ FILTRO=nome; chips(); render(); };
       el.appendChild(c);
     });
   }
   function render(){
     var t = BUSCA.trim().toLowerCase();
-    var vis = DATA.filter(function(x){
+    var vis = ITENS.filter(function(x){
       if (FILTRO!=='Todos' && x.g!==FILTRO) return false;
       if (!t) return true;
       return x.n.toLowerCase().indexOf(t) !== -1;
@@ -151,38 +187,87 @@
     var lista = document.getElementById('lista'); lista.innerHTML='';
     document.getElementById('vazio').classList.toggle('hidden', vis.length>0);
     vis.forEach(function(x){
-      var on = !!pres[x.n];
       var it = document.createElement('div');
-      it.className = 'item'+(on?' pres':'');
+      it.className = 'item'+(x.presente?' pres':'');
       it.innerHTML = '<div class="info"><div class="nome">'+esc(x.n)+'</div><span class="grp">'+esc(x.g)+'</span></div>';
       var b = document.createElement('button');
-      b.className = 'toggle'+(on?' on':'');
-      b.textContent = on ? '✓ Presente' : 'Marcar';
+      b.className = 'toggle'+(x.presente?' on':'');
+      b.textContent = x.presente ? '✓ Presente' : 'Marcar';
       b.onclick = function(){
-        if (pres[x.n]) delete pres[x.n]; else pres[x.n]=true;
-        salvar(); contadores(); render();
+        x.presente = !x.presente;
+        if (MODO==='online') { enviarPresenca(x.email, x.presente); }
+        else { if(x.presente) presLocal[x.n]=true; else delete presLocal[x.n]; salvarLocal(); }
+        contadores(); render();
       };
       it.appendChild(b);
       lista.appendChild(it);
     });
   }
+  function setModo(m){
+    MODO = m;
+    var el = document.getElementById('modo');
+    if (m==='online') el.innerHTML = '✅ <b style="color:#6fcf97">Vários celulares</b> — sincronizado. Toque 🔄 para ver as marcações dos outros.';
+    else el.innerHTML = '📱 Só neste celular (marcações salvas aqui).';
+  }
   function abrir(){
     document.getElementById('gate').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     contadores(); chips(); render();
+    if (timer) clearInterval(timer);
+    timer = setInterval(function(){
+      if (MODO==='online' && Date.now()-ultimoEnvio > 12000) recarregarSilencioso();
+    }, 25000);
+  }
+
+  function recarregarSilencioso(){
+    buscarServidor(CHAVE).then(function(r){
+      if (r && r.ok){ construirOnline(r); contadores(); chips(); render(); }
+    }).catch(function(){});
+  }
+
+  // tenta entrar com a senha: online se o servidor responder, senao local
+  function entrar(s){
+    document.getElementById('gateErro').textContent = '';
+    buscarServidor(s).then(function(r){
+      if (r && r.ok === true){
+        CHAVE = s; localStorage.setItem('mc_chave', s); localStorage.setItem('mc_ok','1');
+        construirOnline(r); setModo('online'); abrir();
+      } else {
+        // servidor respondeu, mas senha errada
+        document.getElementById('gateErro').textContent = 'Senha incorreta.';
+      }
+    }).catch(function(){
+      // servidor nao esta ligado -> modo local
+      if (s.toLowerCase() === SENHA_LOCAL){
+        CHAVE = s; localStorage.setItem('mc_chave', s); localStorage.setItem('mc_ok','1');
+        construirLocal(); setModo('local'); abrir();
+      } else {
+        document.getElementById('gateErro').textContent = 'Senha incorreta.';
+      }
+    });
   }
 
   document.getElementById('entrar').onclick = function(){
     var s = document.getElementById('senha').value.trim();
-    if (s.toLowerCase() !== SENHA){ document.getElementById('gateErro').textContent='Senha incorreta.'; return; }
-    localStorage.setItem('mc_ok','1'); abrir();
+    if (!s){ document.getElementById('gateErro').textContent='Digite a senha.'; return; }
+    document.getElementById('gateErro').textContent = 'Entrando…';
+    entrar(s);
   };
   document.getElementById('senha').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('entrar').click(); });
   document.getElementById('busca').addEventListener('input', function(e){ BUSCA=e.target.value; render(); });
-  document.getElementById('limpar').onclick = function(){
-    if (confirm('Desmarcar TODAS as presenças? Isso não pode ser desfeito.')){ pres={}; salvar(); contadores(); render(); }
+  document.getElementById('recarregar').onclick = function(){
+    if (MODO==='online') recarregarSilencioso();
+    else { construirLocal(); contadores(); chips(); render(); }
   };
-  if (localStorage.getItem('mc_ok')==='1') abrir();
+  document.getElementById('limpar').onclick = function(){
+    if (MODO==='online'){ alert('No modo vários celulares, desmarque uma por uma tocando em "✓ Presente".'); return; }
+    if (confirm('Desmarcar TODAS as presenças deste aparelho?')){ presLocal={}; salvarLocal(); construirLocal(); contadores(); render(); }
+  };
+
+  // se ja logou antes, entra direto com a senha guardada
+  if (localStorage.getItem('mc_ok')==='1' && localStorage.getItem('mc_chave')){
+    entrar(localStorage.getItem('mc_chave'));
+  }
 </script>
 </body>
 </html>
