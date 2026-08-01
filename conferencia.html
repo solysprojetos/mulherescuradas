@@ -101,7 +101,7 @@
     <div class="toolbar">
       <input class="busca" id="busca" placeholder="🔎 Buscar por nome…">
       <button class="btn ghost" id="recarregar">🔄 Atualizar</button>
-      <button class="btn ghost" id="baixar">⬇️ Baixar</button>
+      <button class="btn ghost" id="baixar">📄 Baixar PDF</button>
     </div>
     <div id="modo" style="text-align:center;font-size:12px;color:var(--muted);margin:-4px 0 12px"></div>
     <div class="chips" id="chips"></div>
@@ -261,38 +261,59 @@
     else { construirLocal(); contadores(); chips(); render(); }
   };
 
-  // ---- baixa a lista completa (todas as pessoas) em CSV, abre no Excel/Sheets ----
+  // ---- baixa a lista completa (todas as pessoas) em PDF (abre a impressão -> "Salvar como PDF") ----
   function baixarLista(){
     if (!ITENS.length){ alert('A lista ainda não carregou.'); return; }
-    var ordenado = ITENS.slice().sort(function(a,b){
-      var s = String(a.g).localeCompare(String(b.g), 'pt-BR');
-      if (s !== 0) return s;
-      return String(a.n).localeCompare(String(b.n), 'pt-BR');
-    });
     var pres = ITENS.filter(function(x){ return x.presente; }).length;
-    var linhas = [['Nome','Grupo','Presença']];
-    ordenado.forEach(function(x){ linhas.push([x.n, x.g, x.presente ? 'Presente' : 'Faltou']); });
-    linhas.push(['','','']);
-    linhas.push(['TOTAL INSCRITAS', String(ITENS.length), '']);
-    linhas.push(['PRESENTES', String(pres), '']);
-    linhas.push(['FALTAM', String(ITENS.length - pres), '']);
-    // ; como separador (padrão do Excel em português)
-    var csv = linhas.map(function(l){
-      return l.map(function(c){
-        c = String(c == null ? '' : c);
-        if (/[",;\n]/.test(c)) c = '"' + c.replace(/"/g,'""') + '"';
-        return c;
-      }).join(';');
-    }).join('\r\n');
+    // agrupa por grupo e ordena
+    var grupos = {};
+    ITENS.forEach(function(x){ (grupos[x.g] = grupos[x.g] || []).push(x); });
+    var nomesG = Object.keys(grupos).sort(function(a,b){ return a.localeCompare(b, 'pt-BR'); });
+    var corpo = '';
+    nomesG.forEach(function(g){
+      var arr = grupos[g].slice().sort(function(a,b){ return a.n.localeCompare(b.n, 'pt-BR'); });
+      var pg = arr.filter(function(x){ return x.presente; }).length;
+      corpo += '<h2>' + esc(g) + ' <span class="cnt">' + pg + '/' + arr.length + ' presentes</span></h2>';
+      corpo += '<table><thead><tr><th>#</th><th>Nome</th><th>Presença</th></tr></thead><tbody>';
+      arr.forEach(function(x, i){
+        corpo += '<tr class="' + (x.presente ? 'p' : 'f') + '"><td>' + (i + 1) + '</td><td>' + esc(x.n) + '</td><td>' + (x.presente ? '&#10003; Presente' : '&mdash;') + '</td></tr>';
+      });
+      corpo += '</tbody></table>';
+    });
     var d = new Date();
-    var p2 = function(n){ return (n<10?'0':'') + n; };
-    var nomeArq = 'lista-mulheres-curadas-' + d.getFullYear() + '-' + p2(d.getMonth()+1) + '-' + p2(d.getDate()) + '.csv';
-    var blob = new Blob(['﻿' + csv], { type:'text/csv;charset=utf-8;' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = nomeArq;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    var p2 = function(n){ return (n < 10 ? '0' : '') + n; };
+    var quando = p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+    var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Lista de Presenca - Mulheres Curadas</title>'
+      + '<style>'
+      + '*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:24px}'
+      + 'h1{font-size:20px;margin:0 0 2px}.sub{color:#666;font-size:12px;margin-bottom:14px}'
+      + '.tot{font-size:13px;margin:0 0 6px}.tot b{font-size:15px}'
+      + 'h2{font-size:14px;margin:18px 0 6px;border-bottom:2px solid #c88a80;padding-bottom:3px}'
+      + 'h2 .cnt{float:right;font-weight:normal;color:#666;font-size:12px}'
+      + 'table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:6px}'
+      + 'th,td{border:1px solid #ddd;padding:5px 8px;text-align:left}'
+      + 'th{background:#f4f4f4}td:first-child,th:first-child{width:34px;text-align:center;color:#888}'
+      + 'td:last-child,th:last-child{width:100px}'
+      + 'tr.p td{background:#eafaf0}tr.p td:last-child{color:#1a8a4e;font-weight:bold}'
+      + 'tr.f td:last-child{color:#bbb}'
+      + '@media print{body{margin:12px}h2{page-break-after:avoid}tr{page-break-inside:avoid}}'
+      + '</style></head><body>'
+      + '<h1>&#127800; Mulheres Curadas &mdash; Lista de Presen&ccedil;a</h1>'
+      + '<div class="sub">1&ordm; de agosto de 2026 &middot; gerado em ' + quando + '</div>'
+      + '<p class="tot">Inscritas: <b>' + ITENS.length + '</b> &nbsp;&middot;&nbsp; Presentes: <b>' + pres + '</b> &nbsp;&middot;&nbsp; Faltam: <b>' + (ITENS.length - pres) + '</b></p>'
+      + corpo
+      + '</body></html>';
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
+    document.body.appendChild(iframe);
+    var doc = iframe.contentWindow.document;
+    doc.open(); doc.write(html); doc.close();
+    iframe.contentWindow.focus();
+    setTimeout(function(){
+      try { iframe.contentWindow.print(); } catch(e){ alert('Nao consegui abrir a impressao. Tente novamente.'); }
+      setTimeout(function(){ if (iframe.parentNode) iframe.parentNode.removeChild(iframe); }, 3000);
+    }, 400);
   }
   document.getElementById('baixar').onclick = baixarLista;
   document.getElementById('limpar').onclick = function(){
