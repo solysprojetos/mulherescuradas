@@ -86,6 +86,33 @@ A página é um site estático — dá para publicar no **GitHub Pages**:
 
 ---
 
+## Depois do evento (pós-evento)
+O evento aconteceu em **1º de agosto de 2026**. Estas mudanças já estão prontas:
+
+- **Inscrições encerradas:** a página `index.html` não recebe mais inscrições.
+  No lugar do formulário, agora aparece o convite para **deixar um comentário**
+  de como foi viver esse momento. No script, a trava é a linha
+  `var INSCRICOES_ABERTAS = false;` (se um dia reabrir, é só voltar para `true`).
+
+- **Atualizar a planilha só com os presentes:** no menu **🌸 Mulheres Curadas**
+  da planilha, clique em **“Atualizar presença oficial (só presentes)”**
+  (função `atualizarPresencaOficial`). Ela marca como **presentes** apenas as
+  **68** pessoas que estiveram no evento (conforme a lista de presença) e
+  ausentes o restante — tanto na aba **Presença** quanto nas caixinhas da aba
+  **Conferência**.
+
+- **Disparo de agradecimento:** no mesmo menu, clique em
+  **“Enviar e-mail de agradecimento”** (função `enviarAgradecimento`). O e-mail
+  vai **somente para quem esteve presente** e traz um botão para a pessoa
+  **deixar o comentário** no site. (Rode o passo anterior antes, para a lista
+  de presentes estar certinha.)
+
+- **Comentários:** cada comentário enviado pelo site cai na aba **Comentários**
+  da planilha (Data/Hora, Nome, Grupo, Comentário) e um aviso chega no seu
+  e-mail.
+
+---
+
 ## Dúvidas comuns
 - **Mudei o script depois. E agora?** Refaça o **Passo 3** escolhendo
   **Gerenciar implantações → Editar → Nova versão → Implantar** (a URL continua a mesma).

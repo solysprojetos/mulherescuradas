@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Convite Especial 💌 Mulheres Curadas</title>
+<title>💖 Mulheres Curadas — Deixe seu comentário</title>
 
 <!-- previa do link no WhatsApp e redes sociais -->
-<meta property="og:title" content="Você recebeu um convite especial 💌">
-<meta property="og:description" content="Mulheres Curadas, por Karoline Rodrigues. 1º de agosto de 2026 (sábado), às 18h, na CC Visão Profética, em Maracanaú. Toque para abrir sua carta.">
+<meta property="og:title" content="Mulheres Curadas 💖 Obrigada por viver esse momento">
+<meta property="og:description" content="O Mulheres Curadas, por Karoline Rodrigues, aconteceu em 1º de agosto de 2026. Deixe seu comentário de como foi viver esse momento.">
 <meta property="og:image" content="https://mulherescuradas.institutoabner.com.br/capa-mulheres-curadas-v2.jpg">
 <meta property="og:url" content="https://mulherescuradas.institutoabner.com.br/">
 <meta property="og:type" content="website">
@@ -151,6 +151,21 @@
   }
   input::placeholder{color:#8a7168}
   input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(175,117,105,.2)}
+  textarea{
+    width:100%;padding:16px 18px;border-radius:12px;
+    background:var(--input);border:1px solid var(--border);
+    color:var(--text);font-family:inherit;font-size:16px;
+    resize:vertical;min-height:130px;line-height:1.5;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  textarea::placeholder{color:#8a7168}
+  textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(175,117,105,.2)}
+  .encerrado{
+    display:flex;align-items:center;gap:10px;justify-content:center;text-align:center;
+    background:rgba(175,117,105,.12);border:1px solid rgba(175,117,105,.35);
+    color:var(--pink-2);border-radius:12px;padding:12px 14px;
+    font-size:13.5px;font-weight:600;line-height:1.4;margin-bottom:20px;
+  }
   .submit{
     width:100%;margin-top:28px;padding:17px;border:none;border-radius:12px;
     background:linear-gradient(90deg,var(--pink),var(--pink-2) 55%,var(--orange));
@@ -383,10 +398,10 @@
     <img class="brasao dir" src="mc-monograma-claro.png" alt="">
     <div class="center">
       <span class="badge">
-        <span class="btxt">Convite Exclusivo</span>
+        <span class="btxt">Gratidão 💖</span>
       </span>
-      <h1>Você está <span class="grad">convidada</span></h1>
-      <p class="subtitle">Mulheres curadas por Karoline Rodrigues</p>
+      <h1>Mulheres <span class="grad">Curadas</span></h1>
+      <p class="subtitle">Obrigada por viver esse momento com a gente</p>
     </div>
 
     <div class="video">
@@ -396,68 +411,33 @@
       </video>
     </div>
 
-    <div id="locknote" class="locknote">
-      <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm3 8H9V6a3 3 0 016 0v3z"/></svg>
-      <div class="lk-text">
-        <b>Assista o vídeo até o final</b> para liberar sua inscrição.
-        <span>A inscrição abre automaticamente quando o vídeo terminar.</span>
-        <div class="progress"><i id="progressbar"></i></div>
-      </div>
-    </div>
-
-    <div id="eventoDetalhes" class="evento-card" style="display:none">
+    <div id="eventoDetalhes" class="evento-card">
       <div class="ev-linha">
         <span class="ico">📅</span>
-        <div><b>1º DE AGOSTO DE 2026</b><small>SÁBADO · 18H</small></div>
+        <div><b>ACONTECEU EM 1º DE AGOSTO DE 2026</b><small>SÁBADO · 18H</small></div>
       </div>
       <div class="ev-linha">
         <span class="ico">📍</span>
         <div><b>CC VISÃO PROFÉTICA</b><small>AV. DOS MARINHEIROS, 319, CIDADE NOVA · MARACANAÚ, CE</small></div>
       </div>
       <div class="ev-linha">
-        <span class="ico">⏰</span>
-        <div><b>INICIAREMOS PONTUALMENTE</b><small>NÃO SE ATRASE!</small></div>
+        <span class="ico">💖</span>
+        <div><b>UM DIA INESQUECÍVEL</b><small>OBRIGADA A CADA UMA QUE ESTEVE PRESENTE!</small></div>
       </div>
     </div>
 
-    <div id="form" class="form locked">
-      <h2>Inscreva-se</h2>
-      <p class="hint">Preencha seus dados para participar</p>
+    <div id="comentario" class="form reveal">
+      <div class="encerrado">🌸 As inscrições estão encerradas — o evento já aconteceu.</div>
+      <h2>Deixe seu comentário</h2>
+      <p class="hint">Conta pra gente: como foi viver esse momento de Mulheres Curadas? 💖</p>
 
-      <label for="nome">Nome</label>
-      <input id="nome" type="text" placeholder="Seu nome completo" autocomplete="name" autocapitalize="words">
+      <label for="cNome">Seu nome</label>
+      <input id="cNome" type="text" placeholder="Como você quer se identificar" autocomplete="name" autocapitalize="words">
 
-      <label for="wpp">WhatsApp</label>
-      <input id="wpp" type="tel" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="tel">
+      <label for="cComentario">Seu comentário</label>
+      <textarea id="cComentario" placeholder="Escreva aqui como foi essa experiência para você…"></textarea>
 
-      <label for="email">E-mail</label>
-      <input id="email" type="email" placeholder="seu@email.com" autocomplete="email" inputmode="email" autocapitalize="off">
-
-      <label>Você faz parte de qual grupo?</label>
-      <div class="radio-group">
-        <label class="radio-opt">
-          <input type="radio" name="publico" value="SGROUP NACIONAL">
-          <span class="dot"></span>
-          <span class="txt">SGROUP NACIONAL</span>
-        </label>
-        <label class="radio-opt">
-          <input type="radio" name="publico" value="SOLYS GESTÃO ADMINISTRATIVA">
-          <span class="dot"></span>
-          <span class="txt">SOLYS GESTÃO ADMINISTRATIVA</span>
-        </label>
-        <label class="radio-opt">
-          <input type="radio" name="publico" value="CONVIDADAS">
-          <span class="dot"></span>
-          <span class="txt">CONVIDADAS<small>Convite particular</small></span>
-        </label>
-        <label class="radio-opt">
-          <input type="radio" name="publico" value="VOLUNTÁRIOS">
-          <span class="dot"></span>
-          <span class="txt">VOLUNTÁRIOS<small>Quero ajudar no evento</small></span>
-        </label>
-      </div>
-
-      <button class="submit" id="btnSubmit" type="button">Quero participar</button>
+      <button class="submit" id="btnComentario" type="button">Enviar comentário</button>
       <p id="msg" class="msg"></p>
     </div>
 
@@ -465,27 +445,13 @@
       <div class="check">
         <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
       </div>
-      <h2>Inscrição confirmada! 💖</h2>
-      <p>Enviamos um e-mail de confirmação para <b id="okEmail"></b>.<br>Confira também a caixa de spam/promoções.</p>
-      <div class="evento-card" style="margin:18px 0;text-align:left">
-        <div class="ev-linha">
-          <span class="ico">📅</span>
-          <div><b>1º DE AGOSTO DE 2026</b><small>SÁBADO · 18H</small></div>
-        </div>
-        <div class="ev-linha">
-          <span class="ico">📍</span>
-          <div><b>CC VISÃO PROFÉTICA</b><small>AV. DOS MARINHEIROS, 319, CIDADE NOVA · MARACANAÚ, CE</small></div>
-        </div>
-        <div class="ev-linha">
-          <span class="ico">⏰</span>
-          <div><b>INICIAREMOS PONTUALMENTE</b><small>NÃO SE ATRASE!</small></div>
-        </div>
-      </div>
+      <h2>Comentário enviado! 💖</h2>
+      <p>Obrigada por compartilhar como foi viver esse momento de <b>Mulheres Curadas</b>. Seu carinho significa muito para nós. 🌸</p>
       <a class="insta-btn" href="https://www.instagram.com/mulherescuradasofc_?igsh=MWU4MmRpbDFtZndsbA==" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.9 5.9 0 00-2.13 1.38A5.9 5.9 0 00.63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.8.72 1.48 1.38 2.13a5.9 5.9 0 002.13 1.38c.76.3 1.64.5 2.91.56 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 002.13-1.38 5.9 5.9 0 001.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 00-1.38-2.13A5.9 5.9 0 0019.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 105.84 12 6.16 6.16 0 0012 5.84zm0 10.16A4 4 0 1116 12a4 4 0 01-4 4zm7.85-10.4a1.44 1.44 0 11-1.44-1.44 1.44 1.44 0 011.44 1.44z"/></svg>
         <span>SIGA NO INSTAGRAM<small>@mulherescuradasofc_</small></span>
       </a>
-      <p>Nos vemos lá! ✨</p>
+      <p>Até a próxima! ✨</p>
     </div>
 
     <footer class="assinatura">
@@ -525,82 +491,37 @@
       });
     })();
 
+    // ---------- envio do comentário (pós-evento) ----------
     (function(){
-      var video = document.getElementById('convite-video');
-      var form  = document.getElementById('form');
-      var lock  = document.getElementById('locknote');
-      var bar   = document.getElementById('progressbar');
-      var btn   = document.getElementById('btnSubmit');
-      var msg   = document.getElementById('msg');
-      var unlocked = false;
-
-      function unlock(){
-        if(unlocked) return;
-        unlocked = true;
-        form.classList.remove('locked');
-        form.classList.add('reveal');
-        lock.style.display = 'none';
-        document.getElementById('eventoDetalhes').style.display = 'block';
-        form.scrollIntoView({behavior:'smooth', block:'center'});
-      }
-
-      // barra de progresso conforme assiste
-      video.addEventListener('timeupdate', function(){
-        if(video.duration){
-          bar.style.width = Math.min(100,(video.currentTime/video.duration)*100) + '%';
-        }
-      });
-      // libera o formulário quando o vídeo termina
-      video.addEventListener('ended', unlock);
-
-      // ---------- envio da inscrição ----------
-      var nome  = document.getElementById('nome');
-      var wpp   = document.getElementById('wpp');
-      var email = document.getElementById('email');
-
-      function emailValido(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-
-      // mascara automatica do WhatsApp: (00) 00000-0000
-      wpp.addEventListener('input', function(){
-        var d = wpp.value.replace(/\D/g,'').slice(0,11);
-        var f = '';
-        if(d.length > 0) f = '(' + d.slice(0,2);
-        if(d.length >= 3) f += ') ' + d.slice(2,7);
-        if(d.length >= 8) f += '-' + d.slice(7);
-        wpp.value = f;
-      });
-      function limpaErros(){ [nome,wpp,email].forEach(function(el){ el.classList.remove('input-erro'); }); }
+      var card = document.getElementById('comentario');
+      var btn  = document.getElementById('btnComentario');
+      var msg  = document.getElementById('msg');
+      var nome = document.getElementById('cNome');
+      var txt  = document.getElementById('cComentario');
 
       btn.addEventListener('click', function(){
-        limpaErros();
+        nome.classList.remove('input-erro');
+        txt.classList.remove('input-erro');
         msg.className = 'msg';
         msg.textContent = '';
 
-        var grupoEl = document.querySelector('input[name="publico"]:checked');
-        var erro = null, alvo = null;
-
-        if(!nome.value.trim()){ erro = 'Digite seu nome.'; alvo = nome; }
-        else if(!wpp.value.trim()){ erro = 'Digite seu WhatsApp.'; alvo = wpp; }
-        else if(!emailValido(email.value.trim())){ erro = 'Digite um e-mail válido.'; alvo = email; }
-        else if(!grupoEl){ erro = 'Selecione a qual grupo você pertence.'; }
-
-        if(erro){
+        if(!txt.value.trim()){
           msg.className = 'msg erro';
-          msg.textContent = erro;
-          if(alvo){ alvo.classList.add('input-erro'); alvo.focus(); }
+          msg.textContent = 'Escreva seu comentário 💬';
+          txt.classList.add('input-erro');
+          txt.focus();
           return;
         }
 
         var dados = {
-          nome:  nome.value.trim(),
-          whatsapp: wpp.value.trim(),
-          email: email.value.trim(),
-          grupo: grupoEl.value
+          acao: 'comentario',
+          nome: nome.value.trim(),
+          comentario: txt.value.trim()
         };
 
         if(URL_PLANILHA === "COLE_A_URL_AQUI"){
           msg.className = 'msg info';
-          msg.textContent = '⚠️ Formulário ainda não conectado. Falta colar a URL da planilha (veja INSTRUCOES.md).';
+          msg.textContent = '⚠️ Ainda não conectado. Falta colar a URL da planilha (veja INSTRUCOES.md).';
           return;
         }
 
@@ -615,8 +536,7 @@
           mode: 'no-cors',
           body: JSON.stringify(dados)
         }).then(function(){
-          document.getElementById('okEmail').textContent = dados.email;
-          form.style.display = 'none';
+          card.style.display = 'none';
           document.getElementById('success').style.display = 'block';
           document.getElementById('success').scrollIntoView({behavior:'smooth', block:'center'});
         }).catch(function(){

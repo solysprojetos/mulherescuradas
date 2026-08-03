@@ -16,6 +16,9 @@ var CHAVE_LISTA    = 'curadas2026';                 // senha para abrir a lista 
 var EMAIL_AVISO    = 'solysprojetos@gmail.com';     // quem recebe o aviso de nova inscrição
 var DATA_EVENTO    = '1º DE AGOSTO DE 2026 (SÁBADO), ÀS 18H';
 var LOCAL_EVENTO   = 'CC VISÃO PROFÉTICA, AV. DOS MARINHEIROS, 319, CIDADE NOVA, MARACANAÚ, CE';
+var NOME_COMENTARIOS = 'Comentários';               // aba com os comentários/depoimentos
+var INSCRICOES_ABERTAS = false;                     // false = evento já aconteceu (form encerrado)
+var URL_SITE       = 'https://mulherescuradas.institutoabner.com.br/'; // site (link do comentário)
 // ===========================================
 
 function doPost(e) {
@@ -29,6 +32,18 @@ function doPost(e) {
       if (dados.chave !== CHAVE_LISTA) return resposta({ ok: false, erro: 'nao_autorizado' });
       marcarPresenca_(dados.email, dados.presente === true || dados.presente === 'true');
       return resposta({ ok: true });
+    }
+
+    // comentário/depoimento vindo da página (pós-evento)
+    if (dados.acao === 'comentario') {
+      salvarComentario_(dados.nome, dados.comentario, dados.grupo);
+      avisarComentario_(dados);
+      return resposta({ ok: true });
+    }
+
+    // inscrições encerradas: não aceita novas inscrições
+    if (!INSCRICOES_ABERTAS) {
+      return resposta({ ok: false, erro: 'inscricoes_encerradas' });
     }
 
     var ss  = SpreadsheetApp.getActiveSpreadsheet();
@@ -294,6 +309,9 @@ function onOpen() {
     .createMenu('🌸 Mulheres Curadas')
     .addItem('Atualizar lista de conferência', 'montarListaConferencia')
     .addItem('Organizar planilha de inscrições', 'organizarPlanilha')
+    .addSeparator()
+    .addItem('Atualizar presença oficial (só presentes)', 'atualizarPresencaOficial')
+    .addItem('Enviar e-mail de agradecimento', 'enviarAgradecimento')
     .addToUi();
 }
 
@@ -539,4 +557,211 @@ function enviarFalta2DiasRestantes() {
     Utilities.sleep(300);
   }
   Logger.log('Disparo "Faltam 2 dias" (restantes): ' + total + ' enviados, ' + pulados + ' pulados.');
+}
+
+// ======================================================================
+// ===== PÓS-EVENTO: presença oficial, agradecimento e comentários ======
+// ======================================================================
+
+// Normaliza um nome para comparar (MAIÚSCULO, sem acento, espaços únicos).
+function normalizarChaveNome_(v) {
+  var s = String(v || '').replace(/\s+/g, ' ').trim().toUpperCase();
+  s = s.normalize ? s.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : s;
+  return s;
+}
+
+// Lista OFICIAL de quem esteve PRESENTE (68), conforme a lista de presença
+// gerada em 01/08/2026 19:06. Usada para atualizar a planilha e para o
+// disparo de agradecimento (só vai para quem esteve presente).
+var PRESENTES_OFICIAL = [
+  // CONVIDADAS (27)
+  'ADRIELLE RODRIGUES FIDELES PINHEIRO', 'AMANDA HULY', 'ANDREA DA SILVA FREITAS',
+  'ANTONIA RAQUEL', 'BRUNA KAREN', 'BRUNA LIMA', 'CAMILA DE ARAÚJO RIBEIRO',
+  'CLEIDELENE NOGUEIRA NUNES', 'CRISTIANA ARAUJO DA COSTA MONTEIRO',
+  'DARLYANE DA SILVA OLIVEIRA', 'ELAINE', 'ELISANGELA SILVA ARAÚJO',
+  'ELVIRENE VALÉRIO', 'EMILE MARINHO', 'IVONETE MARINHO', 'JESSIKA SZABO',
+  'LIDIANE MONTE', 'LUANA VANESSA', 'MARIA ANETE MARINHO DA SILVA',
+  'MARIA DO SOCORRO PEREIRA SAMPAIO', 'MARIA SAYONARA ALVES GURGEL', 'MILENE BARROSO',
+  'NATASHA SARAIVA PAULA', 'PATRICIA BRAGA', 'PRISCILA NASCIMENTO COSTA PEREIRA',
+  'ROSE MARINHO', 'VITORIA OLIVEIRA ALBUQUERQUE',
+  // SGROUP NACIONAL (18)
+  'ALICE VITÓRIA', 'AMANDA SOUSA DIAS', 'CLAUDIANA PAIVA LIMA SILVA', 'ELIZABETH BERANEK',
+  'ERIKA MARQUES LEITAO', 'GEISSIANE MARTINS DE SOUZA ANOS', 'ISABELLE GOMES',
+  'JULIANA DE SOUSA SILVA PAULINO', 'LILIANE DA SILVA BANDEIRA',
+  'LUANE PEREIRA DE OLIVEIRA PAIVA', 'MALINDA GAIL ABREU BARROSO', 'MEIRE MARQUES',
+  'MILENA VIANA', 'NAYARA ALVES VASCONCELOS', 'SANDRA MOREIRA', 'SARAH BRITO',
+  'STHEFFANY ARAUJO', 'THAIZ RHAIANE BEZERRA BARROS',
+  // SOLYS GESTÃO ADMINISTRATIVA (9)
+  'AGLAY CRISTHIAN DE O. TEIXEIRA', 'ANDREYZA MATOS DE OLIVEIRA', 'CAMILA RODRIGUES MESQUITA',
+  'ERISHELDA DE SOUSA DAMASCENO CAVALCANTE', 'FRANCISCA SAMILA DE BRITO SANTOS',
+  'KALINA RODRIGUES CARVALHO', 'LIANA HOLANDA', 'NAYELLY ALVES DA SILVA',
+  'SARAH CARDOSO SILVA',
+  // VOLUNTÁRIOS (14)
+  'BRUNA DE JESUS OLIVEIRA', 'CRISTINA MARTINS', 'DAFINY WENDY GOMES LIMA',
+  'JOÃO DAVI DE SOUZA NASCIMENTO', 'LUIZ DANILO AZEVEDO',
+  'MANOEL EUFRASIO GALVÃO DO NASCIMENTO', 'MARIA DE FÁTIMA DA COSTA ANDRADE',
+  'NATHIELY MORAIS', 'NICLAILTON DA COSTA ANDRADE', 'OTNIEL DE OLIVEIRA SOARES',
+  'OZIEL DE OLIVEIRA SOARES', 'PABLO PATRICK MENDES DA SILVA', 'PAMELA DANTAS',
+  'RAFAELA MENDES'
+];
+
+// Atualiza a planilha com a PRESENÇA OFICIAL: marca como presentes só quem
+// esteve no evento (lista acima) e ausentes todo o resto — nas abas
+// "Presença" (por e-mail, alimenta o site) e "Conferência" (as caixinhas).
+function atualizarPresencaOficial() {
+  var ss     = SpreadsheetApp.getActiveSpreadsheet();
+  var origem = ss.getSheetByName(NOME_ABA) || ss.getSheets()[0];
+  var ult    = origem.getLastRow();
+
+  // conjunto de nomes presentes (normalizados)
+  var presentesNome = {};
+  for (var j = 0; j < PRESENTES_OFICIAL.length; j++) {
+    presentesNome[normalizarChaveNome_(PRESENTES_OFICIAL[j])] = true;
+  }
+
+  // 1) aba "Presença" (por e-mail) — reescreve tudo: presente = true/false
+  var aba = ss.getSheetByName(NOME_PRESENCA) || ss.insertSheet(NOME_PRESENCA);
+  aba.clear();
+  aba.getRange(1, 1, 1, 3).setValues([['E-mail', 'Presente', 'Quando']]).setFontWeight('bold');
+
+  var linhas = [], agora = new Date(), vistos = {}, achadosNome = {}, presentesEmail = 0;
+  if (ult >= 2) {
+    var dd = origem.getRange(2, 1, ult - 1, 5).getValues();
+    for (var k = 0; k < dd.length; k++) {
+      var nomeN = normalizarChaveNome_(dd[k][1]);
+      var em    = padronizarEmail(dd[k][3]);
+      if (!em || vistos[em]) continue;
+      vistos[em] = true;
+      var presente = presentesNome[nomeN] === true;
+      if (presente) { presentesEmail++; achadosNome[nomeN] = true; }
+      linhas.push([em, presente, agora]);
+    }
+  }
+  if (linhas.length) aba.getRange(2, 1, linhas.length, 3).setValues(linhas);
+  aba.setFrozenRows(1);
+
+  // nomes do PDF que não bateram com ninguém da planilha (para conferência)
+  var naoAchados = [];
+  for (var n in presentesNome) { if (!achadosNome[n]) naoAchados.push(n); }
+
+  // 2) aba "Conferência" (por nome) — marca as caixinhas dos presentes
+  montarListaConferencia(); // garante a lista atual
+  var conf = ss.getSheetByName(NOME_CONFERENCIA);
+  if (conf && conf.getLastRow() >= 2) {
+    var nomes = conf.getRange(2, 2, conf.getLastRow() - 1, 1).getValues(); // coluna B
+    var marcas = [];
+    for (var r = 0; r < nomes.length; r++) {
+      marcas.push([presentesNome[normalizarChaveNome_(nomes[r][0])] === true]);
+    }
+    conf.getRange(2, 1, marcas.length, 1).setValues(marcas);
+  }
+
+  SpreadsheetApp.flush();
+  Logger.log('Presença oficial: ' + presentesEmail + ' presentes com e-mail marcados. ' +
+             'Nomes do PDF sem correspondência na planilha: ' + (naoAchados.join(' | ') || 'nenhum'));
+}
+
+// ===== DISPARO: e-mail de AGRADECIMENTO (só para quem esteve presente) =====
+function enviarAgradecimento() {
+  var ss     = SpreadsheetApp.getActiveSpreadsheet();
+  var origem = ss.getSheetByName(NOME_ABA) || ss.getSheets()[0];
+  var ult    = origem.getLastRow();
+
+  var presentesNome = {};
+  for (var j = 0; j < PRESENTES_OFICIAL.length; j++) {
+    presentesNome[normalizarChaveNome_(PRESENTES_OFICIAL[j])] = true;
+  }
+
+  var testes  = ['gustavo teste', 'teste', 'solys projetos', 'teste cores e local'];
+  var assunto = '💖 Obrigada por viver o Mulheres Curadas com a gente!';
+  var jaEnviei = {}, total = 0, pulados = 0;
+
+  if (ult >= 2) {
+    var dd = origem.getRange(2, 1, ult - 1, 5).getValues();
+    for (var i = 0; i < dd.length; i++) {
+      var nomeBruto = String(dd[i][1] || '').trim();
+      var nomeN = normalizarChaveNome_(dd[i][1]);
+      var email = limparEmail_(dd[i][3]);
+      var chave = email.toLowerCase();
+      if (presentesNome[nomeN] !== true) continue;                 // só presentes
+      if (testes.indexOf(nomeBruto.toLowerCase()) !== -1) continue;
+      if (!emailValido_(email)) { if (email) { pulados++; } continue; }
+      if (jaEnviei[chave]) continue;
+      jaEnviei[chave] = true;
+      var primeiroNome = nomeBruto.split(' ')[0] || '';
+      try {
+        MailApp.sendEmail({ to: email, subject: assunto, htmlBody: htmlAgradecimento_(primeiroNome), name: REMETENTE });
+        total++;
+      } catch (err) {
+        pulados++;
+        Logger.log('Falhou para ' + email + ': ' + err);
+      }
+      Utilities.sleep(300);
+    }
+  }
+  Logger.log('Disparo de agradecimento: ' + total + ' enviados, ' + pulados + ' pulados.');
+}
+
+// HTML do e-mail de agradecimento (com botão para deixar o comentário)
+function htmlAgradecimento_(primeiroNome) {
+  var ola = primeiroNome ? ('Olá ' + primeiroNome + ', ') : 'Olá, ';
+  var linkComentario = URL_SITE.replace(/\/+$/, '') + '/#comentario';
+  return '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#170f0d;color:#f4eef6;border-radius:16px;overflow:hidden">' +
+      '<div style="padding:28px 26px;background:linear-gradient(90deg,#af7569,#c88a80,#d9a898);text-align:center">' +
+        '<h1 style="margin:0;font-size:24px;color:#fff">💖 Gratidão!</h1>' +
+      '</div>' +
+      '<div style="padding:26px 24px">' +
+        '<p style="font-size:16px;color:#f4eef6">' + ola + 'que alegria ter você com a gente! 🌸</p>' +
+        '<p style="font-size:15px;line-height:1.7;color:#ddccc2">Do fundo do nosso coração, <b style="color:#c88a80">muito obrigada</b> por ter vivido o <b style="color:#c88a80">' + NOME_EVENTO + '</b> conosco. Cada presença fez desse momento algo ainda mais especial. Que a cura, a restauração e o novo tempo que Deus iniciou continuem florescendo na sua vida. 🙏</p>' +
+        '<div style="background:#221715;border:1px solid rgba(175,117,105,.4);border-radius:12px;padding:20px;margin:20px 0;text-align:center">' +
+          '<p style="margin:0 0 14px;font-size:15px;color:#ddccc2">Conta pra gente: <b style="color:#c88a80">como foi viver esse momento?</b> Seu comentário é muito importante para nós. 💬</p>' +
+          '<a href="' + linkComentario + '" style="display:inline-block;background:linear-gradient(90deg,#af7569,#c88a80,#d9a898);color:#4a2c26;text-decoration:none;font-weight:bold;font-size:15px;padding:14px 26px;border-radius:12px">💬 Deixar meu comentário</a>' +
+        '</div>' +
+        '<p style="font-size:14px;line-height:1.6;color:#ddccc2;font-style:italic;text-align:center;border-top:1px solid rgba(175,117,105,.3);padding-top:16px;margin-top:16px">' +
+          '"Dar-vos-ei um coração novo e porei dentro de vós um espírito novo."<br>' +
+          '<span style="color:#c88a80;font-style:normal">Ezequiel 36:26</span>' +
+        '</p>' +
+        '<p style="font-size:15px;line-height:1.6;color:#ddccc2;text-align:center;margin-top:18px">Com carinho,<br>Karoline Rodrigues</p>' +
+      '</div>' +
+    '</div>';
+}
+
+// ===== COMENTÁRIOS (depoimentos pós-evento) =====
+// Salva um comentário na aba "Comentários".
+function salvarComentario_(nome, comentario, grupo) {
+  var texto = String(comentario || '').trim();
+  if (!texto) return;
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getSheetByName(NOME_COMENTARIOS);
+  if (!aba) {
+    aba = ss.insertSheet(NOME_COMENTARIOS);
+    aba.appendRow(['Data/Hora', 'Nome', 'Grupo', 'Comentário']);
+    aba.getRange(1, 1, 1, 4).setFontWeight('bold');
+    aba.setFrozenRows(1);
+  }
+  aba.appendRow([new Date(), padronizarNome(nome), padronizarGrupo(grupo), texto]);
+  aba.getRange(aba.getLastRow(), 1).setNumberFormat('dd/MM/yyyy HH:mm');
+}
+
+// Avisa a organizadora quando chega um novo comentário.
+function avisarComentario_(dados) {
+  var comentario = escaparHtml_(dados.comentario);
+  var assunto = '💬 Novo comentário: ' + (dados.nome || 'anônimo');
+  var html =
+    '<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto">' +
+      '<h2 style="color:#af7569">Novo comentário — ' + NOME_EVENTO + ' 💖</h2>' +
+      '<table style="border-collapse:collapse;width:100%;font-size:14px">' +
+        linha('Nome', dados.nome) +
+        linha('Grupo', dados.grupo) +
+      '</table>' +
+      '<p style="font-size:15px;line-height:1.6;margin-top:14px;white-space:pre-wrap;background:#faf5f8;border:1px solid #eee;border-radius:10px;padding:14px">' + comentario + '</p>' +
+    '</div>';
+  MailApp.sendEmail({ to: EMAIL_AVISO, subject: assunto, htmlBody: html, name: REMETENTE });
+}
+
+// escapa caracteres de HTML (para não quebrar o e-mail de aviso)
+function escaparHtml_(v) {
+  return String(v || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
